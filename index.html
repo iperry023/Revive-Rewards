@@ -280,8 +280,10 @@ const S = {
   mine:{received:0, redeemed:0, balance:0}, myReds:[], myHistory:[], urls:new Map(), needsPoints:false,
   admin:{ reds:[], summary:new Map() }, facilityFilter:"", loaded:false
 };
-const P = id => S.people.get(id) || { id, full_name:"Former employee", title:"", facility:"", active:false };
+const SYSTEM = { id:null, full_name:"Revive Rewards", title:"", facility:"", active:false, system:true };
+const P = id => id == null ? SYSTEM : (S.people.get(id) || { id, full_name:"Former employee", title:"", facility:"", active:false });
 function avatar(id, cls="av"){
+  if (id == null) return h("img",{class:cls, src:"assets/rmark.png", alt:"Revive Rewards", style:"object-fit:contain;background:var(--gold-soft);padding:4px"});
   const p = P(id); const ini = (p.full_name||"?").split(/\s+/).filter(Boolean).map(w=>w[0]).slice(0,2).join("").toUpperCase();
   return h("span",{class:cls, style:"background:" + colorFor(id), title:p.full_name, text:ini});
 }
@@ -358,6 +360,7 @@ async function afterLogin(){
     if (!me.active){ await sb.auth.signOut(); return showLogin("This account has been deactivated. Talk to your administrator."); }
     S.me = me;
     if (me.must_change_password) return showChangePassword(true);
+    try { await sb.rpc("run_celebrations"); } catch(e){ /* the daily schedule covers it */ }
     await loadAll();
     S.loaded = true;
     showShell(true);
@@ -657,12 +660,12 @@ function postCard(p){
     h("div",{class:"pad"},
       h("div",{class:"head"}, avatar(p.author),
         h("div",{style:"flex:1;min-width:0"},
-          h("div",{}, h("b",{text:P(p.author).full_name}), " recognized ", nameList(p.recipients, 4)),
-          h("div",{class:"small muted",text:ago(p.created_at) + (P(p.author).title ? " · " + P(p.author).title : "")}))),
+          h("div",{}, h("b",{text:P(p.author).full_name}), p.author == null ? " is celebrating " : " recognized ", nameList(p.recipients, 4)),
+          h("div",{class:"small muted",text:ago(p.created_at) + (p.author == null ? " · Automatic celebration" : P(p.author).title ? " · " + P(p.author).title : "")}))),
       (p.core_value || grants.length) ? h("div",{class:"row wrapf",style:"margin-top:10px;gap:6px"},
         p.core_value ? h("span",{class:"chip",text:p.core_value}) : null,
         grants.map(g => h("span",{class:"chip gold",title:"Added by " + P(g.given_by).full_name + " · " + ago(g.created_at)},
-          "+" + g.points_each + " pts" + (g.recipients.length > 1 ? " each" : "") + (g.recipients.length < p.recipients.length ? " to " + g.recipients.map(r => P(r).full_name.split(" ")[0]).join(", ") : "") + " from " + P(g.given_by).full_name.split(" ")[0],
+          "+" + g.points_each + " pts" + (g.recipients.length > 1 ? " each" : "") + (g.recipients.length < p.recipients.length ? " to " + g.recipients.map(r => P(r).full_name.split(" ")[0]).join(", ") : "") + " from " + (g.given_by ? P(g.given_by).full_name.split(" ")[0] : "Revive Rewards"),
           admin ? h("button",{type:"button",title:"Remove these points","aria-label":"Remove these points",text:"×",onclick:()=>removeGrant(g)}) : null))) : null,
       h("div",{class:"text",text:p.body}),
       img ? h("img",{class:"photo",src:img.url,alt:"Photo shared with this shout-out",loading:"lazy",onclick:()=>modal(h("img",{class:"full",src:img.url,alt:""}))}) : null,
@@ -1268,14 +1271,28 @@ function adminSettings(){
   const cents = h("input",{class:"input",type:"number",min:"0.1",step:"0.1"});
   const vals = h("textarea",{class:"input",style:"min-height:150px"});
   const facs = h("textarea",{class:"input",style:"min-height:110px"});
-  let dirty = false; [name, cents, vals, facs].forEach(x => x.addEventListener("input", () => dirty = true));
+  const autoOn = h("input",{type:"checkbox"});
+  const bday$ = h("input",{class:"input",type:"number",min:"0",step:"1"});
+  const anniv$ = h("input",{class:"input",type:"number",min:"0",step:"1"});
+  const miles = h("textarea",{class:"input",style:"min-height:110px",placeholder:"5 = 250\n10 = 500"});
+  const ptsHint = inp => { const d = h("div",{class:"small muted"}); const u = () => d.textContent = (+inp.value >= 0 && inp.value !== "") ? "= " + Math.round(+inp.value * 100 / (+cents.value || S.settings.point_value_cents)).toLocaleString() + " pts" : ""; inp.addEventListener("input", u); cents.addEventListener("input", u); d._u = u; return d; };
+  const bdayHint = ptsHint(bday$), annivHint = ptsHint(anniv$);
+  let dirty = false; [name, cents, vals, facs, autoOn, bday$, anniv$, miles].forEach(x => x.addEventListener("input", () => dirty = true));
   const save = h("button",{class:"btn primary",text:"Save settings"});
   save.onclick = async () => {
     const pc = +cents.value;
     if (!(pc > 0)) return toast("Point value must be more than 0.");
     const lines = t => t.value.split("\n").map(s => s.trim()).filter(Boolean).slice(0, 30);
+    const ms = {};
+    for (const line of lines(miles)){
+      const m = line.replace(/[$,]/g, "").match(/^(\d+)\s*(?:years?|yrs?)?\s*[=:\-]\s*(\d+(?:\.\d+)?)$/i);
+      if (!m) return toast("Couldn't read milestone line “" + line + "”. Use the form 5 = 250.");
+      ms[String(+m[1])] = +m[2];
+    }
+    if (!(+bday$.value >= 0) || !(+anniv$.value >= 0)) return toast("Celebration amounts must be 0 or more.");
     busy(save, "Saving…");
-    try { await q(sb.from("settings").update({ program_name: name.value.trim() || "Revive Rewards", point_value_cents:pc, core_values:lines(vals), facilities:lines(facs) }).eq("id",1));
+    try { await q(sb.from("settings").update({ program_name: name.value.trim() || "Revive Rewards", point_value_cents:pc, core_values:lines(vals), facilities:lines(facs),
+      auto_awards:autoOn.checked, birthday_dollars:+bday$.value || 0, anniversary_dollars:+anniv$.value || 0, milestone_dollars:ms }).eq("id",1));
       dirty = false; toast("Settings saved"); await refresh(); }
     catch(e){ toast(errText(e)); }
     unbusy(save);
@@ -1286,10 +1303,21 @@ function adminSettings(){
       h("div",{}, h("label",{class:"f",text:"Value of 1 point, in cents"}), cents, h("div",{class:"small muted",text:"10 means 100 pts = $10"})),
       h("div",{}, h("label",{class:"f",text:"Values staff can tag (one per line)"}), vals),
       h("div",{}, h("label",{class:"f",text:"Buildings (one per line)"}), facs, h("div",{class:"small muted",text:"With more than one, the feed gets a building filter."}))),
+    h("h3",{text:"Automatic celebration points",style:"font-size:19px;margin:22px 0 4px"}),
+    h("p",{class:"small muted",style:"margin:0 0 10px",text:"Every morning, active employees with a birthday or work anniversary that day get a celebration post in the feed with these points attached. New employees start from the day they're added, with no back-pay for earlier dates."}),
+    h("label",{class:"row",style:"gap:8px;cursor:pointer;margin-bottom:10px"}, autoOn, "Give celebration points automatically"),
+    h("div",{class:"two"},
+      h("div",{}, h("label",{class:"f",text:"Birthday ($)"}), bday$, bdayHint),
+      h("div",{}, h("label",{class:"f",text:"Work anniversary, regular years ($)"}), anniv$, annivHint),
+      h("div",{}, h("label",{class:"f",text:"Milestone anniversaries (years = dollars, one per line)"}), miles,
+        h("div",{class:"small muted",text:"A milestone replaces the regular anniversary amount for that year."}))),
     h("div",{class:"row",style:"margin-top:14px"}, h("span",{class:"sp"}), save));
   el._refresh = () => { if (dirty) return; const s = S.settings;
     name.value = s.program_name; cents.value = String(s.point_value_cents);
-    vals.value = (s.core_values||[]).join("\n"); facs.value = (s.facilities||[]).join("\n"); };
+    vals.value = (s.core_values||[]).join("\n"); facs.value = (s.facilities||[]).join("\n");
+    autoOn.checked = s.auto_awards !== false; bday$.value = String(s.birthday_dollars ?? 25); anniv$.value = String(s.anniversary_dollars ?? 25);
+    const md = s.milestone_dollars || {}; miles.value = Object.keys(md).sort((a,b) => +a - +b).map(k => k + " = " + md[k]).join("\n");
+    bdayHint._u(); annivHint._u(); };
   return el;
 }
 

@@ -37,6 +37,8 @@ Sign in with the username and temporary password from step 1.3, choose your own 
 
 **Giving points (admins only):** every post in the feed has a **★ Add points** button for admins. Choose who on the post gets points and how many. Admins can also include points when they write their own shout-out. To catch up on posts, check **Only posts without points** above the feed. Points show on the post as a gold tag (for example, "+25 pts from Ian"); click the × on the tag to take them back. Admins can't give points to themselves.
 
+**Automatic celebration points:** every morning at 6 AM Pacific, active employees with a birthday or work anniversary that day get a celebration post from "Revive Rewards" with points attached. Defaults: $25 for birthdays, $25 for anniversaries, and $250 / $500 / $750 / $1,000 at 5 / 10 / 15 / 20 years (a milestone replaces the regular amount). Change the amounts or turn it off in **Admin → Settings**. If a day is missed, it catches up within 3 days. People are never paid for dates before they were added. As a backup, the first person to open the site each day also triggers the check.
+
 **Admin → Settings:** point value (default 100 pts = $10), the values staff can tag, and the list of buildings.
 
 **Admin → Points report:** everyone's balance and the total dollar value of unspent points. Download it as a CSV for Excel.
@@ -61,9 +63,8 @@ All point rules are enforced by the database, not the web page, so they can't be
 | `index.html` | The whole website |
 | `config.js` | Your Supabase connection settings |
 | `assets/` | Revive logo and icons |
-| `supabase/setup.sql` | Creates the database tables and security rules (run once) |
+| `supabase/setup.sql` | Creates the database tables and security rules. Safe to run again: after downloading a new version, re-run it to update the database |
 | `supabase/first-admin.sql` | Creates the first admin login (run once) |
-| `supabase/update-celebrations.sql` | Adds birthdays and anniversaries, only if you ran an older setup.sql |
 
 ## Free tier notes
 Supabase's free tier includes 500 MB of database and 1 GB of photo storage, which is plenty for several facilities (photos are shrunk before upload). A free project **pauses after 7 days with no activity**. Daily use keeps it awake, and if it does pause, click **Restore** in the Supabase dashboard. The Pro plan ($25/month) removes the pause.
