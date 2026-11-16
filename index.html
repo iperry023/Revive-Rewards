@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Revive Rewards</title>
+<link rel="icon" type="image/png" href="assets/icon-32.png">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<meta name="theme-color" content="#f7941d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Sorts+Mill+Goudy&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#faf6f1; --card:#ffffff; --ink:#1c1a18; --muted:#6e6760; --line:#ece4da;
+  --pri:#c9501b; --pri-2:#ef7a22; --pri-soft:#fdece0; --gold:#f7941d; --gold-soft:#fef1df; --gold-ink:#9a4c00;
+  --red:#b4442f; --red-soft:#f8e4df; --ok:#2f7a4f; --ok-soft:#e3f2e8;
+  --shadow:0 1px 2px rgba(0,0,0,.05),0 4px 14px rgba(0,0,0,.04); --radius:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#171412; --card:#221d1a; --ink:#f1ece6; --muted:#a69d94; --line:#352d27;
+    --pri:#ff9a5c; --pri-2:#ffb27f; --pri-soft:#3a2518; --gold:#f7a13a; --gold-soft:#3a2a17; --gold-ink:#f7a13a;
+    --red:#ee8a74; --red-soft:#3b231e; --ok:#7cc79a; --ok-soft:#1d3326; --shadow:none; }
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 "DM Sans",system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3{font-family:"Sorts Mill Goudy",Georgia,serif;font-weight:400;margin:0;line-height:1.2}
+a{color:var(--pri)}
+.top{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:3px solid var(--gold);box-shadow:0 1px 8px rgba(0,0,0,.05)}
+.top-in{max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:18px;padding:10px 18px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-family:"Sorts Mill Goudy",Georgia,serif;font-size:26px;text-decoration:none;color:var(--ink)}
+.brand img{height:36px;width:auto}
+nav{display:flex;gap:4px;flex-wrap:wrap}
+nav a{color:var(--ink);text-decoration:none;padding:7px 12px;border-radius:999px;opacity:.8;font-weight:500}
+nav a:hover{opacity:1;background:var(--pri-soft)}
+nav a.on{opacity:1;background:var(--pri-soft);color:var(--pri)}
+.me{margin-left:auto;display:flex;align-items:center;gap:8px}
+.pill{background:var(--gold);color:#2b1400;border-radius:999px;padding:6px 14px;font-weight:700;white-space:nowrap;border:0;cursor:pointer}
+.menu{position:relative}
+.menu>button{border:0;background:none;cursor:pointer;padding:2px;border-radius:50%}
+.menu .dd{right:0;left:auto;min-width:220px}
+.wrap{max-width:1120px;margin:0 auto;padding:22px 18px 60px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:22px;align-items:start}
+@media (max-width:880px){ .grid{grid-template-columns:1fr} }
+@media (max-width:600px){ .top{position:static} .top-in{gap:8px} .me{margin-left:0} .wrap{padding:14px 12px 50px} }
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.pad{padding:16px 18px}
+.muted{color:var(--muted)} .small{font-size:13px}
+.row{display:flex;align-items:center;gap:10px} .wrapf{flex-wrap:wrap} .sp{flex:1}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 14px;cursor:pointer;font-weight:500;text-decoration:none;color:var(--ink);display:inline-block}
+.btn:hover{border-color:var(--pri-2)}
+.btn.primary{background:var(--pri);border-color:var(--pri);color:#fff}
+@media (prefers-color-scheme: dark){ .btn.primary{color:#1a0d05} }
+.btn.gold{background:var(--gold);border-color:var(--gold);color:#2b1400}
+.btn.danger{color:var(--red)}
+.btn.ghost{border-color:transparent;background:transparent;padding:6px 10px}
+.btn.ghost:hover{background:var(--pri-soft)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.full{width:100%;text-align:center;padding:11px}
+.input{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:9px 12px;outline:none}
+.input:focus{border-color:var(--pri-2);box-shadow:0 0 0 3px var(--pri-soft)}
+textarea.input{resize:vertical;min-height:80px}
+label.f{display:block;font-size:13px;font-weight:500;color:var(--muted);margin:0 0 5px}
+.fld{margin-top:12px}
+.av{width:38px;height:38px;border-radius:50%;flex:none;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff;letter-spacing:.3px}
+.av.sm{width:28px;height:28px;font-size:11px} .av.xs{width:22px;height:22px;font-size:9px}
+.chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 10px;font-size:13px;font-weight:500;background:var(--pri-soft);color:var(--pri)}
+.chip.gold{background:var(--gold-soft);color:var(--gold-ink)} .chip.red{background:var(--red-soft);color:var(--red)}
+.chip.grey{background:var(--line);color:var(--muted)} .chip.ok{background:var(--ok-soft);color:var(--ok)}
+.chip button{border:0;background:none;cursor:pointer;padding:0 0 0 2px;color:inherit;font-size:15px;line-height:1}
+.picker{position:relative}
+.picker .box{display:flex;flex-wrap:wrap;gap:6px;align-items:center;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:6px 8px;min-height:42px;cursor:text}
+.picker .box:focus-within{border-color:var(--pri-2);box-shadow:0 0 0 3px var(--pri-soft)}
+.picker input{border:0;outline:none;background:transparent;flex:1;min-width:140px;padding:4px}
+.dd{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:30;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.12);overflow:auto;max-height:320px}
+.dd>div,.dd>button{padding:8px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;width:100%;border:0;background:none;text-align:left}
+.dd>div:hover,.dd>div.hi,.dd>button:hover{background:var(--pri-soft)}
+.dd .none{cursor:default;color:var(--muted)}
+.vals{display:flex;flex-wrap:wrap;gap:6px}
+.vals button{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:5px 12px;cursor:pointer;font-size:13px}
+.vals button.on{background:var(--pri);border-color:var(--pri);color:#fff}
+.preview{position:relative;margin-top:10px;display:inline-block}
+.preview img{max-height:160px;border-radius:10px;display:block}
+.preview button{position:absolute;top:6px;right:6px;border:0;border-radius:50%;width:26px;height:26px;background:rgba(0,0,0,.6);color:#fff;cursor:pointer}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:600px){ .two{grid-template-columns:1fr} }
+.post{margin-top:16px}
+.post .head{display:flex;gap:12px;align-items:flex-start}
+.post .text{white-space:pre-wrap;word-wrap:break-word;margin:10px 0 4px;font-size:16px}
+.post .photo{margin-top:10px;border-radius:12px;max-width:100%;max-height:520px;display:block;cursor:zoom-in;background:var(--line);min-height:80px}
+.post.award{border-color:var(--gold)}
+.post.award .ribbon{background:var(--gold-soft);color:var(--gold-ink);border-radius:var(--radius) var(--radius) 0 0;padding:7px 18px;font-weight:700;font-size:13px;letter-spacing:.3px}
+.actions{display:flex;gap:4px;border-top:1px solid var(--line);margin-top:12px;padding-top:8px}
+.like.on{color:var(--red)}
+.likers{font-size:13px;color:var(--muted);margin-top:4px}
+.comments{margin-top:8px;display:flex;flex-direction:column;gap:8px}
+.cmt{display:flex;gap:8px;align-items:flex-start}
+.cmt .bub{background:var(--bg);border-radius:12px;padding:7px 12px;flex:1;min-width:0}
+.cmt .bub b{font-size:13px}
+.cmt .bub div{white-space:pre-wrap;word-wrap:break-word}
+.cmt .x{border:0;background:none;color:var(--muted);cursor:pointer;font-size:12px;padding:2px 4px}
+.addc{display:flex;gap:8px;margin-top:10px;align-items:center}
+.addc input{flex:1}
+.side .card{margin-bottom:16px}
+.big{font-family:"Sorts Mill Goudy",Georgia,serif;font-size:42px;line-height:1;color:var(--pri)}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin:8px 0 4px}
+.bar>i{display:block;height:100%;background:var(--gold);border-radius:99px}
+.lb{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.lb .n{width:20px;text-align:center;font-weight:700;color:var(--muted)}
+.ell{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-top:16px}
+.reward{display:flex;flex-direction:column;overflow:hidden}
+.reward .art{height:110px;display:flex;align-items:center;justify-content:center;font-size:52px;background:linear-gradient(135deg,var(--pri-soft),var(--gold-soft))}
+.reward .body{padding:14px 16px;display:flex;flex-direction:column;gap:6px;flex:1}
+.reward .cost{font-weight:700;color:var(--pri)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+tr.off td{opacity:.55}
+.plus{color:var(--ok);font-weight:700} .minus{color:var(--red);font-weight:700}
+.sec{margin-top:22px}
+.sec>h2{font-size:22px;margin-bottom:10px}
+.subnav{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 4px}
+.subnav button{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 14px;cursor:pointer;font-weight:500}
+.subnav button.on{background:var(--pri);border-color:var(--pri);color:#fff}
+.subnav .count{background:var(--gold);color:#2b1400;border-radius:99px;padding:0 7px;font-size:12px;margin-left:4px}
+.banner{padding:10px 14px;border-radius:12px;margin-bottom:14px;background:var(--gold-soft);color:var(--gold-ink)}
+.banner.err{background:var(--red-soft);color:var(--red)}
+.empty{text-align:center;padding:40px 20px;color:var(--muted)}
+.auth{max-width:400px;margin:8vh auto 40px;padding:28px}
+.auth .logo{display:block;max-width:240px;width:100%;margin:0 auto 6px}
+.auth h1{text-align:center;font-size:30px;margin:8px 0 2px}
+.auth .err{color:var(--red);font-size:14px;margin-top:10px;min-height:1em}
+.creds{background:var(--bg);border:1px dashed var(--pri-2);border-radius:12px;padding:12px 14px;font-family:ui-monospace,Menlo,monospace;font-size:14px;white-space:pre-wrap;margin:12px 0}
+#modal{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:rgba(10,8,6,.55);padding:18px}
+#modal.on{display:flex}
+#modal>.card{max-width:460px;width:100%;padding:22px;max-height:92vh;overflow:auto}
+#modal img.full{max-width:92vw;max-height:88vh;border-radius:12px;display:block}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:60;font-weight:500;max-width:90vw;text-align:center}
+#toast.on{opacity:1}
+.hidden{display:none !important}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.emo{width:64px;text-align:center}
+.search{max-width:280px}
+</style>
+</head>
+<body>
+<header class="top hidden" id="top">
+  <div class="top-in">
+    <a class="brand" href="#feed"><img src="assets/rmark.png" alt="Revive Health"><span id="brandName">Revive Rewards</span></a>
+    <nav id="nav">
+      <a href="#feed" data-v="feed">Feed</a>
+      <a href="#rewards" data-v="rewards">Rewards</a>
+      <a href="#wallet" data-v="wallet">My points</a>
+      <a href="#admin" data-v="admin" class="hidden" id="navAdmin">Admin</a>
+    </nav>
+    <div class="me">
+      <button class="pill" id="pill" title="Your points balance"></button>
+      <div class="menu" id="menu"></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap" id="app"></div>
+<div id="modal"></div>
+<div id="toast"></div>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+"use strict";
+/* =================== helpers =================== */
+function h(tag, props, ...kids){
+  const el = document.createElement(tag);
+  if (props) for (const [k,v] of Object.entries(props)){
+    if (v == null || v === false) continue;
+    if (k === "class") el.className = v;
+    else if (k === "text") el.textContent = v;
+    else if (k === "style") el.style.cssText = v;
+    else if (k === "value") el.value = v;
+    else if (k === "checked") el.checked = !!v;
+    else if (k.startsWith("on") && typeof v === "function") el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? "" : String(v));
+  }
+  for (const c of kids.flat(Infinity)){
+    if (c == null || c === false || c === "") continue;
+    el.append(c instanceof Node ? c : document.createTextNode(String(c)));
+  }
+  return el;
+}
+const $ = s => document.querySelector(s);
+const EMAIL_DOMAIN = "staff.reviverewards.internal";
+const fmtPts = n => (Number(n)||0).toLocaleString() + " pts";
+function money(points){ const v = (Number(points)||0) * S.settings.point_value_cents / 100; return "$" + (Number.isInteger(v) ? v.toLocaleString() : v.toFixed(2)); }
+function ago(t){
+  const ms = typeof t === "number" ? t : Date.parse(t); const s = Math.max(0,(Date.now()-ms)/1000);
+  if (s < 60) return "just now"; if (s < 3600) return Math.floor(s/60) + "m ago";
+  if (s < 86400) return Math.floor(s/3600) + "h ago"; if (s < 604800) return Math.floor(s/86400) + "d ago";
+  const d = new Date(ms); return d.toLocaleDateString(undefined,{month:"short",day:"numeric",year: d.getFullYear()===new Date().getFullYear()?undefined:"numeric"});
+}
+const dateStr = t => new Date(t).toLocaleDateString();
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("on"); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("on"),3200); }
+function errText(e){
+  const m = (e && (e.message || e.error_description)) || String(e || "");
+  if (/Failed to fetch|NetworkError|Load failed/i.test(m)) return "Can't reach the server. Check your internet connection.";
+  if (/JWT expired|invalid JWT/i.test(m)) return "Your session expired. Please sign in again.";
+  return m || "Something went wrong. Please try again.";
+}
+async function q(promise){ const { data, error } = await promise; if (error) throw error; return data; }
+function modal(content, onClose){
+  const m = $("#modal"); m.replaceChildren(content); m.classList.add("on");
+  m.onclick = e => { if (e.target === m){ closeModal(); onClose && onClose(); } };
+}
+function closeModal(){ const m=$("#modal"); m.classList.remove("on"); m.replaceChildren(); }
+function busy(btn, label){ btn.disabled = true; btn._label = btn.textContent; btn.replaceChildren(h("span",{class:"spinner"}), " " + (label || "Working…")); }
+function unbusy(btn){ btn.disabled = false; btn.textContent = btn._label || btn.textContent; }
+function confirmBox(title, body, okLabel, onOk, danger){
+  const ok = h("button",{class:"btn " + (danger ? "danger" : "primary"),text:okLabel});
+  modal(h("div",{class:"card"},
+    h("h3",{text:title,style:"font-size:22px;margin-bottom:8px"}),
+    h("div",{class:"muted",style:"margin-bottom:18px"}, body),
+    h("div",{class:"row",style:"justify-content:flex-end"}, h("button",{class:"btn",text:"Cancel",onclick:closeModal}), ok)));
+  ok.onclick = async () => { busy(ok); try { await onOk(); closeModal(); } catch(e){ console.error(e); unbusy(ok); toast(errText(e)); } };
+}
+async function copyText(text){
+  try { await navigator.clipboard.writeText(text); toast("Copied"); }
+  catch(e){ const ta = h("textarea",{value:text,style:"position:fixed;opacity:0"}); document.body.append(ta); ta.select(); try{ document.execCommand("copy"); toast("Copied"); }catch(_){ toast("Couldn't copy"); } ta.remove(); }
+}
+function tempPassword(){
+  const words = ["Maple","River","Cedar","Summit","Aspen","Harbor","Meadow","Willow","Canyon","Sierra","Juniper","Falcon"];
+  const a = new Uint32Array(2); crypto.getRandomValues(a);
+  return words[a[0] % words.length] + "-" + String(1000 + a[1] % 9000);
+}
+function usernameFrom(name){
+  return name.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9 .-]/g,"").trim().replace(/\s+/g,".").replace(/\.+/g,".").slice(0,40);
+}
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const bdayText = p => p.birth_month ? MONTHS[p.birth_month-1].slice(0,3) + " " + p.birth_day : "";
+const hireText = p => p.hire_date ? new Date(p.hire_date + "T12:00:00").toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}) : "";
+// birthdays and work anniversaries in the next `days` days (today first)
+function upcomingCelebrations(days){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const out = [];
+  const isLeap = y => (y%4===0 && y%100!==0) || y%400===0;
+  for (const p of S.people.values()){
+    if (!p.active) continue;
+    const add = (m, d, kind, years) => {
+      for (const y of [today.getFullYear(), today.getFullYear()+1]){
+        let dd = d; if (m === 2 && d === 29 && !isLeap(y)) dd = 28;
+        const when = new Date(y, m-1, dd);
+        const diff = Math.round((when - today) / 86400000);
+        if (diff >= 0 && diff <= days){ const yrs = years ? y - years : 0; if (kind === "bday" || yrs >= 1) out.push({ p, kind, when, diff, yrs }); break; }
+      }
+    };
+    if (p.birth_month && p.birth_day) add(p.birth_month, p.birth_day, "bday");
+    if (p.hire_date){ const [hy, hm, hd] = p.hire_date.split("-").map(Number); add(hm, hd, "anniv", hy); }
+  }
+  return out.sort((a,b) => a.diff - b.diff || a.p.full_name.localeCompare(b.p.full_name));
+}
+const COLORS = ["#c9501b","#e07b1c","#b8721a","#8a5a3c","#2f7a6b","#3c6e9e","#7a4f9a","#a8445e","#5b7a2f","#3f5f7a"];
+function colorFor(id){ let h0 = 0; for (const c of String(id)) h0 = (h0*31 + c.charCodeAt(0)) >>> 0; return COLORS[h0 % COLORS.length]; }
+
+/* =================== state =================== */
+const C = window.REVIVE_CONFIG || {};
+let sb = null;
+const S = {
+  session:null, me:null, view:"feed", adminTab:"requests",
+  settings:{ program_name:"Revive Rewards", point_value_cents:10, core_values:[], facilities:[] },
+  people:new Map(), rewards:[], posts:[], hasMore:false, likes:new Map(), comments:new Map(), grants:new Map(), month:[], monthGrants:[],
+  mine:{received:0, redeemed:0, balance:0}, myReds:[], myHistory:[], urls:new Map(), needsPoints:false,
+  admin:{ reds:[], summary:new Map() }, facilityFilter:"", loaded:false
+};
+const P = id => S.people.get(id) || { id, full_name:"Former employee", title:"", facility:"", active:false };
+function avatar(id, cls="av"){
+  const p = P(id); const ini = (p.full_name||"?").split(/\s+/).filter(Boolean).map(w=>w[0]).slice(0,2).join("").toUpperCase();
+  return h("span",{class:cls, style:"background:" + colorFor(id), title:p.full_name, text:ini});
+}
+function nameList(list, max=3){
+  const out = []; const shown = list.slice(0, max);
+  shown.forEach((id,i) => { if (i) out.push(i === shown.length-1 && list.length <= max ? " and " : ", "); out.push(h("b",{text:P(id).full_name})); });
+  if (list.length > max) out.push(" and " + (list.length-max) + " other" + (list.length-max===1?"":"s"));
+  return out;
+}
+
+/* =================== boot / auth =================== */
+function app(){ return $("#app"); }
+function showShell(on){ $("#top").classList.toggle("hidden", !on); }
+
+async function boot(){
+  if (!C.supabaseUrl || /PASTE/.test(C.supabaseUrl) || !C.supabaseKey || /PASTE/.test(C.supabaseKey)){
+    showShell(false);
+    app().replaceChildren(h("div",{class:"card auth"},
+      h("img",{class:"logo",src:"assets/revive-logo.png",alt:"Revive Health"}),
+      h("h1",{text:"Almost there"}),
+      h("p",{class:"muted",style:"text-align:center",text:"This site isn't connected to its database yet. Open config.js in the GitHub repository and paste in your Supabase Project URL and publishable key."})));
+    return;
+  }
+  if (!window.supabase){ showShell(false); app().replaceChildren(h("div",{class:"card auth"}, h("h1",{text:"Can't load"}), h("p",{class:"muted",text:"A required file didn't load. Check your internet connection and refresh the page."}))); return; }
+  sb = window.supabase.createClient(C.supabaseUrl, C.supabaseKey, { auth:{ persistSession:true, autoRefreshToken:true } });
+  sb.auth.onAuthStateChange((evt, session) => {
+    if (evt === "SIGNED_OUT"){ S.session = null; S.me = null; S.loaded = false; showLogin(); }
+    else if (session) S.session = session;
+  });
+  window.addEventListener("hashchange", route);
+  const { data } = await sb.auth.getSession();
+  if (!data.session) return showLogin();
+  S.session = data.session;
+  await afterLogin();
+}
+
+function showLogin(msg){
+  showShell(false);
+  const user = h("input",{class:"input",autocomplete:"username",autocapitalize:"none",spellcheck:"false",placeholder:"e.g. maria.lopez"});
+  const pass = h("input",{class:"input",type:"password",autocomplete:"current-password"});
+  const err = h("div",{class:"err",text:msg||""});
+  const go = h("button",{class:"btn primary full",type:"submit",text:"Sign in"});
+  const form = h("form",{},
+    h("div",{class:"fld"}, h("label",{class:"f",text:"Username"}), user),
+    h("div",{class:"fld"}, h("label",{class:"f",text:"Password"}), pass),
+    h("div",{style:"margin-top:18px"}, go), err,
+    h("p",{class:"small muted",style:"text-align:center;margin-top:16px",text:"Forgot your password or need an account? Ask your administrator."}));
+  form.onsubmit = async e => {
+    e.preventDefault(); err.textContent = "";
+    const u = user.value.trim().toLowerCase();
+    if (!u || !pass.value){ err.textContent = "Enter your username and password."; return; }
+    busy(go, "Signing in…");
+    const { data, error } = await sb.auth.signInWithPassword({ email: u.includes("@") ? u : u + "@" + EMAIL_DOMAIN, password: pass.value });
+    if (error){
+      unbusy(go);
+      err.textContent = /banned/i.test(error.message) ? "This account has been deactivated. Talk to your administrator."
+                      : /Invalid login/i.test(error.message) ? "Wrong username or password." : errText(error);
+      return;
+    }
+    S.session = data.session; await afterLogin();
+  };
+  app().replaceChildren(h("div",{class:"card auth"},
+    h("img",{class:"logo",src:"assets/revive-logo.png",alt:"Revive Health"}),
+    h("h1",{text:S.settings.program_name || "Revive Rewards"}),
+    h("p",{class:"muted",style:"text-align:center;margin:0 0 6px",text:"Recognize your coworkers. Earn rewards."}), form));
+  setTimeout(()=>user.focus(), 50);
+}
+
+async function afterLogin(){
+  app().replaceChildren(h("div",{class:"empty"}, h("span",{class:"spinner"}), " Loading…"));
+  try {
+    const me = await q(sb.from("profiles").select("*").eq("id", S.session.user.id).maybeSingle());
+    if (!me){ await sb.auth.signOut(); return showLogin("This login isn't linked to an employee profile. Ask your administrator."); }
+    if (!me.active){ await sb.auth.signOut(); return showLogin("This account has been deactivated. Talk to your administrator."); }
+    S.me = me;
+    if (me.must_change_password) return showChangePassword(true);
+    await loadAll();
+    S.loaded = true;
+    showShell(true);
+    $("#navAdmin").classList.toggle("hidden", me.role !== "admin");
+    route();
+    startPolling();
+  } catch(e){ console.error(e); app().replaceChildren(h("div",{class:"card auth"}, h("h1",{text:"Something went wrong"}), h("p",{class:"muted",text:errText(e)}), h("button",{class:"btn",text:"Try again",onclick:()=>location.reload()}))); }
+}
+
+function showChangePassword(first){
+  const p1 = h("input",{class:"input",type:"password",autocomplete:"new-password"});
+  const p2 = h("input",{class:"input",type:"password",autocomplete:"new-password"});
+  const err = h("div",{class:"err"});
+  const go = h("button",{class:"btn primary full",type:"submit",text:"Save new password"});
+  const form = h("form",{},
+    h("div",{class:"fld"}, h("label",{class:"f",text:"New password (at least 8 characters)"}), p1),
+    h("div",{class:"fld"}, h("label",{class:"f",text:"Type it again"}), p2),
+    h("div",{style:"margin-top:18px"}, go), err);
+  form.onsubmit = async e => {
+    e.preventDefault(); err.textContent = "";
+    if (p1.value.length < 8) return err.textContent = "Use at least 8 characters.";
+    if (p1.value !== p2.value) return err.textContent = "The two passwords don't match.";
+    busy(go, "Saving…");
+    try {
+      await q(sb.auth.updateUser({ password: p1.value }));
+      await q(sb.rpc("password_changed"));
+      S.me.must_change_password = false;
+      if (first) { toast("Password saved. Welcome!"); await afterLogin(); } else { closeModal(); toast("Password changed"); }
+    } catch(ex){ unbusy(go); err.textContent = /different from the old/i.test(ex.message||"") ? "Pick a password different from your temporary one." : errText(ex); }
+  };
+  const box = h("div",{class:"card " + (first ? "auth" : "")},
+    first ? h("img",{class:"logo",src:"assets/revive-logo.png",alt:"Revive Health"}) : null,
+    h("h1",{text: first ? "Welcome, " + (S.me.full_name.split(" ")[0]) + "!" : "Change password", style: first ? "" : "font-size:22px"}),
+    h("p",{class:"muted",style: first ? "text-align:center" : "",text: first ? "Before you start, choose your own password. Only you will know it." : "Choose a new password."}),
+    form, first ? h("p",{style:"text-align:center;margin-top:12px"}, h("button",{class:"btn ghost small",text:"Sign out",onclick:()=>sb.auth.signOut()})) : null);
+  if (first){ showShell(false); app().replaceChildren(box); setTimeout(()=>p1.focus(),50); }
+  else modal(box);
+}
+
+/* =================== data =================== */
+function monthStartISO(){ const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), 1).toISOString(); }
+async function loadAll(){
+  const [st, ppl, rw] = await Promise.all([
+    q(sb.from("settings").select("*").eq("id",1).maybeSingle()),
+    q(sb.from("profiles").select("id,username,full_name,title,facility,role,active,created_at,birth_month,birth_day,hire_date").order("full_name")),
+    q(sb.from("rewards").select("*").order("sort").order("cost")),
+  ]);
+  if (st) S.settings = st;
+  S.people = new Map(ppl.map(p => [p.id, p]));
+  S.rewards = rw;
+  await Promise.all([loadPosts(Math.max(30, S.posts.length)), loadMine(), S.me.role === "admin" ? loadAdmin() : null]);
+}
+const isAdmin = () => S.me && S.me.role === "admin";
+async function loadMine(){
+  const [sum, reds, month, monthGrants, recv] = await Promise.all([
+    q(sb.rpc("points_summary", { p_user: S.me.id })),
+    q(sb.from("redemptions").select("*").eq("user_id", S.me.id).order("created_at",{ascending:false})),
+    q(sb.from("posts").select("id,author,recipients,created_at").gte("created_at", monthStartISO()).limit(5000)),
+    q(sb.from("post_points").select("recipients,points_each,created_at").gte("created_at", monthStartISO()).limit(5000)),
+    q(sb.from("post_points").select("id,post_id,given_by,points_each,created_at,posts(author,core_value)").contains("recipients",[S.me.id]).order("created_at",{ascending:false}).limit(500)),
+  ]);
+  S.mine = (sum && sum[0]) || { received:0, redeemed:0, balance:0 };
+  S.myReds = reds; S.month = month; S.monthGrants = monthGrants;
+  S.myHistory = [
+    ...recv.map(g => ({ at:g.created_at, kind:"in", pts:g.points_each, by:g.given_by, author: g.posts && g.posts.author, value: g.posts && g.posts.core_value })),
+    ...reds.map(r => ({ at:r.created_at, kind:"out", pts:r.cost, label:r.reward_name, status:r.status, note:r.note })),
+  ].sort((a,b) => Date.parse(b.at) - Date.parse(a.at));
+}
+async function loadPosts(n){
+  const rows = await q(sb.from("posts").select("*").order("created_at",{ascending:false}).limit(n + 1));
+  S.hasMore = rows.length > n; S.posts = rows.slice(0, n);
+  await loadPostExtras();
+}
+async function loadOlder(){
+  const last = S.posts[S.posts.length-1]; if (!last) return;
+  const rows = await q(sb.from("posts").select("*").lt("created_at", last.created_at).order("created_at",{ascending:false}).limit(31));
+  S.hasMore = rows.length > 30; S.posts = S.posts.concat(rows.slice(0,30));
+  await loadPostExtras(); render();
+}
+async function loadPostExtras(){
+  const ids = S.posts.map(p => p.id);
+  if (!ids.length){ S.likes = new Map(); S.comments = new Map(); S.grants = new Map(); return; }
+  const [likes, comments, grants] = await Promise.all([
+    q(sb.from("likes").select("post_id,user_id").in("post_id", ids)),
+    q(sb.from("comments").select("*").in("post_id", ids).order("created_at")),
+    q(sb.from("post_points").select("*").in("post_id", ids).order("created_at")),
+  ]);
+  S.grants = new Map(); for (const g of grants){ if (!S.grants.has(g.post_id)) S.grants.set(g.post_id, []); S.grants.get(g.post_id).push(g); }
+  S.likes = new Map(); for (const l of likes){ if (!S.likes.has(l.post_id)) S.likes.set(l.post_id, []); S.likes.get(l.post_id).push(l.user_id); }
+  S.comments = new Map(); for (const c of comments){ if (!S.comments.has(c.post_id)) S.comments.set(c.post_id, []); S.comments.get(c.post_id).push(c); }
+  const need = S.posts.map(p => p.image_path).filter(p => p && !(S.urls.get(p) && S.urls.get(p).exp > Date.now()));
+  if (need.length){
+    const { data } = await sb.storage.from("photos").createSignedUrls([...new Set(need)], 3600);
+    for (const d of (data || [])) if (d.signedUrl) S.urls.set(d.path, { url:d.signedUrl, exp: Date.now() + 3300e3 });
+  }
+}
+async function loadAdmin(){
+  const [reds, sum] = await Promise.all([
+    q(sb.from("redemptions").select("*").order("created_at",{ascending:false}).limit(500)),
+    q(sb.rpc("points_summary")),
+  ]);
+  S.admin.reds = reds; S.admin.summary = new Map(sum.map(r => [r.user_id, r]));
+}
+async function refresh(){ try { await loadAll(); render(); } catch(e){ console.warn(e); } }
+let pollT = null;
+function startPolling(){
+  clearInterval(pollT);
+  pollT = setInterval(() => { if (document.visibilityState === "visible" && S.loaded && !$("#modal").classList.contains("on") && !document.activeElement.matches("input,textarea,select")) refresh(); }, 60000);
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && S.loaded) refresh(); });
+}
+
+/* =================== routing / render =================== */
+const VIEWS = ["feed","rewards","wallet","admin"];
+function route(){
+  if (!S.loaded) return;
+  let v = (location.hash || "#feed").slice(1);
+  if (!VIEWS.includes(v) || (v === "admin" && S.me.role !== "admin")) v = "feed";
+  if (v !== S.view) window.scrollTo(0,0);
+  S.view = v;
+  document.querySelectorAll("#nav a").forEach(a => a.classList.toggle("on", a.dataset.v === v));
+  render();
+}
+let composerEl = null;
+function render(){
+  if (!S.loaded) return;
+  document.title = S.settings.program_name; $("#brandName").textContent = S.settings.program_name;
+  const pill = $("#pill"); pill.textContent = "★ " + fmtPts(S.mine.balance); pill.onclick = () => location.hash = "#wallet";
+  renderMenu();
+  if (S.view === "feed") renderFeedView();
+  else if (S.view === "rewards") renderRewards();
+  else if (S.view === "wallet") renderWallet();
+  else if (S.view === "admin") renderAdmin();
+}
+function renderMenu(){
+  const m = $("#menu");
+  const dd = h("div",{class:"dd hidden"},
+    h("div",{class:"none",style:"display:block"}, h("div",{style:"font-weight:700;color:var(--ink)",text:S.me.full_name}), h("div",{class:"small",text:"@" + S.me.username + (S.me.title ? " · " + S.me.title : "")})),
+    h("button",{text:"Change password",onclick:()=>{ dd.classList.add("hidden"); showChangePassword(false); }}),
+    h("button",{text:"Sign out",onclick:()=>sb.auth.signOut()}));
+  const btn = h("button",{"aria-label":"Account menu",onclick:(e)=>{ e.stopPropagation(); dd.classList.toggle("hidden"); }}, avatar(S.me.id,"av sm"));
+  m.replaceChildren(btn, dd);
+  document.addEventListener("click", () => dd.classList.add("hidden"), { once:true });
+}
+
+/* ---------- people picker ---------- */
+function makePicker(placeholder, onChange, { allowSelf=false } = {}){
+  let sel = [], hi = 0, list = [];
+  const input = h("input",{placeholder, "aria-label":placeholder, autocomplete:"off"});
+  const box = h("div",{class:"box",onclick:()=>input.focus()});
+  const dd = h("div",{class:"dd hidden"});
+  const el = h("div",{class:"picker"}, box, dd);
+  function chips(){
+    box.replaceChildren(...sel.map(id => h("span",{class:"chip"}, avatar(id,"av xs"), P(id).full_name,
+      h("button",{type:"button","aria-label":"Remove",text:"×",onclick:(e)=>{ e.stopPropagation(); sel = sel.filter(x=>x!==id); chips(); onChange(sel); }}))), input);
+  }
+  function search(){
+    const t = input.value.trim().toLowerCase();
+    list = [...S.people.values()].filter(p => p.active && (allowSelf || p.id !== S.me.id) && !sel.includes(p.id) &&
+      (!t || p.full_name.toLowerCase().includes(t) || p.username.includes(t) || (p.title||"").toLowerCase().includes(t)))
+      .sort((a,b) => (S.facilityFilter && (a.facility===S.facilityFilter) !== (b.facility===S.facilityFilter)) ? (a.facility===S.facilityFilter ? -1 : 1) : a.full_name.localeCompare(b.full_name))
+      .slice(0, 12);
+    hi = 0; draw();
+  }
+  function draw(){
+    dd.replaceChildren(...(list.length ? list.map((p,i) => h("div",{class: i===hi ? "hi" : "", onmousedown:(e)=>{ e.preventDefault(); pick(p.id); }},
+      avatar(p.id,"av sm"), h("div",{style:"min-width:0"}, h("div",{text:p.full_name}), h("div",{class:"small muted ell",text:[p.title,p.facility].filter(Boolean).join(" · ")}))))
+      : [h("div",{class:"none",text:"No matches"})]));
+    dd.classList.remove("hidden");
+  }
+  function pick(id){ sel.push(id); input.value = ""; chips(); onChange(sel); input.focus(); search(); }
+  input.addEventListener("focus", search); input.addEventListener("input", search);
+  input.addEventListener("blur", () => setTimeout(()=>dd.classList.add("hidden"),120));
+  input.addEventListener("keydown", e => {
+    if (e.key === "ArrowDown"){ hi = Math.min(list.length-1, hi+1); draw(); e.preventDefault(); }
+    else if (e.key === "ArrowUp"){ hi = Math.max(0, hi-1); draw(); e.preventDefault(); }
+    else if (e.key === "Enter"){ if (list[hi]) pick(list[hi].id); e.preventDefault(); }
+    else if (e.key === "Backspace" && !input.value && sel.length){ sel.pop(); chips(); onChange(sel); }
+    else if (e.key === "Escape"){ dd.classList.add("hidden"); }
+  });
+  chips();
+  return { el, get:()=>[...sel], clear(){ sel = []; chips(); onChange(sel); },
+    add(id){ if (!sel.includes(id) && id !== S.me.id){ sel.push(id); chips(); onChange(sel); } } };
+}
+
+/* ---------- photos ---------- */
+async function compress(file){
+  try {
+    const bmp = await createImageBitmap(file);
+    const max = 1600, sc = Math.min(1, max / Math.max(bmp.width, bmp.height));
+    const cv = document.createElement("canvas"); cv.width = Math.round(bmp.width*sc); cv.height = Math.round(bmp.height*sc);
+    cv.getContext("2d").drawImage(bmp, 0, 0, cv.width, cv.height);
+    return await new Promise(r => cv.toBlob(b => r(b), "image/jpeg", 0.85));
+  } catch(e){ return null; }
+}
+async function uploadPhoto(file){
+  const blob = await compress(file);
+  if (!blob) throw new Error("That photo couldn't be read. Try a JPG or PNG.");
+  const path = S.me.id + "/" + crypto.randomUUID() + ".jpg";
+  await q(sb.storage.from("photos").upload(path, blob, { contentType:"image/jpeg", upsert:false }));
+  return path;
+}
+function photoInput(state, redraw){
+  const file = h("input",{type:"file",accept:"image/*",class:"hidden"});
+  file.onchange = () => { const f = file.files[0]; file.value = ""; if (!f) return;
+    if (!f.type.startsWith("image/")) return toast("Please choose an image.");
+    if (state.previewUrl) URL.revokeObjectURL(state.previewUrl);
+    state.file = f; state.previewUrl = URL.createObjectURL(f); redraw(); };
+  return { button: h("button",{class:"btn",type:"button",onclick:()=>file.click()},"📷 Add photo", file),
+    preview(){ return state.previewUrl ? h("div",{class:"preview"}, h("img",{src:state.previewUrl,alt:"Photo preview"}),
+      h("button",{type:"button","aria-label":"Remove photo",text:"×",onclick:()=>{ URL.revokeObjectURL(state.previewUrl); state.previewUrl=""; state.file=null; redraw(); }})) : ""; } };
+}
+
+/* ---------- composer ---------- */
+const COMP = { to:[], value:"", points:0, file:null, previewUrl:"", busy:false };
+function buildComposer(){
+  const root = h("div",{class:"card pad"});
+  const picker = makePicker("Who do you want to recognize?", sel => { COMP.to = sel; draw(); });
+  const text = h("textarea",{class:"input",maxlength:"1000",placeholder:"Tell everyone what they did… (e.g. stayed late to help with an admission, made a resident's day)"});
+  const vals = h("div",{class:"vals"});
+  const pts = h("select",{class:"input","aria-label":"Points per person"});
+  pts.onchange = () => { COMP.points = +pts.value; draw(); };
+  const note = h("div",{class:"small muted",style:"margin-top:5px"});
+  const ptsWrap = h("div",{}, h("label",{class:"f",text:"Points for each person (admins only)"}), pts, note);
+  const photo = photoInput(COMP, () => draw());
+  const prev = h("div");
+  const post = h("button",{class:"btn primary",text:"Post shout-out"});
+  post.onclick = async () => {
+    const body = text.value.trim();
+    if (!COMP.to.length) return toast("Pick at least one coworker.");
+    if (!body) return toast("Add a message saying what they did.");
+    busy(post, "Posting…");
+    try {
+      const img = COMP.file ? await uploadPhoto(COMP.file) : null;
+      await q(sb.rpc("give_shoutout", { p_recipients: COMP.to, p_body: body, p_value: COMP.value || null, p_points: COMP.points, p_image: img }));
+      text.value = ""; picker.clear(); COMP.value = ""; COMP.points = 0;
+      if (COMP.previewUrl) URL.revokeObjectURL(COMP.previewUrl); COMP.previewUrl = ""; COMP.file = null;
+      toast("Shout-out posted 🎉");
+      await refresh();
+    } catch(e){ toast(errText(e)); }
+    unbusy(post); draw();
+  };
+  function draw(){
+    vals.replaceChildren(...(S.settings.core_values||[]).map(v => h("button",{type:"button",class: COMP.value===v ? "on" : "", text:v,
+      onclick:()=>{ COMP.value = COMP.value === v ? "" : v; draw(); }})));
+    ptsWrap.classList.toggle("hidden", !isAdmin());
+    if (!isAdmin()) COMP.points = 0;
+    const opts = [0,5,10,15,20,25,50,75,100,150,200,250,500];
+    pts.replaceChildren(...opts.map(x => h("option",{value:String(x), text: x ? x + " pts (" + money(x) + ")" : "No points"})));
+    pts.value = String(COMP.points);
+    note.textContent = COMP.points && COMP.to.length > 1 ? "Total: " + fmtPts(COMP.points * COMP.to.length) + " (" + money(COMP.points * COMP.to.length) + ")" : "You can also add points to anyone's post from the feed.";
+    prev.replaceChildren(photo.preview());
+  }
+  root.append(h("h2",{text:"Give a shout-out",style:"font-size:22px;margin-bottom:12px"}),
+    h("div",{style:"margin-bottom:12px"}, picker.el), text,
+    h("div",{class:"fld"}, h("label",{class:"f",text:"Tag a value (optional)"}), vals),
+    h("div",{class:"two fld"}, ptsWrap, h("div",{}, h("label",{class:"f",text:"Photo (optional)"}), photo.button)),
+    prev, h("div",{class:"row",style:"margin-top:14px"}, h("span",{class:"sp"}), post));
+  root._draw = draw; root._picker = picker; root._text = text; draw();
+  return root;
+}
+
+/* ---------- feed ---------- */
+const cInputs = new Map();
+function renderFeedView(){
+  if (!composerEl) composerEl = buildComposer();
+  composerEl._draw();
+  const active = document.activeElement; const selRange = active && active.dataset && active.dataset.cin ? [active.selectionStart, active.selectionEnd] : null;
+  const facs = S.settings.facilities || [];
+  const filter = facs.length > 1 ? h("select",{class:"input",style:"max-width:240px",onchange:(e)=>{ S.facilityFilter = e.target.value; render(); }},
+      h("option",{value:"",text:"All facilities"}), facs.map(f => h("option",{value:f,text:f}))) : null;
+  if (filter) filter.value = S.facilityFilter;
+  let posts = S.facilityFilter ? S.posts.filter(p => [p.author, ...p.recipients].some(id => P(id).facility === S.facilityFilter)) : S.posts;
+  if (isAdmin() && S.needsPoints) posts = posts.filter(p => !(S.grants.get(p.id) || []).length && p.recipients.some(r => r !== S.me.id));
+  const needs = isAdmin() ? h("label",{class:"row small",style:"gap:6px;cursor:pointer"}, h("input",{type:"checkbox",checked:S.needsPoints,onchange:(e)=>{ S.needsPoints = e.target.checked; render(); }}), "Only posts without points") : null;
+  const feed = h("div",{},
+    (filter || needs) ? h("div",{class:"row wrapf",style:"margin-top:16px;gap:14px"}, filter ? [h("span",{class:"small muted",text:"Showing"}), filter] : null, h("span",{class:"sp"}), needs) : null,
+    posts.length ? posts.map(postCard) : h("div",{class:"card empty post"}, h("div",{style:"font-size:40px",text:"🧡"}), h("p",{text: S.needsPoints ? "Every loaded post already has points. Nice!" : "No shout-outs yet. Be the first to recognize a coworker!"})),
+    S.hasMore ? h("div",{style:"text-align:center;margin-top:16px"}, h("button",{class:"btn",text:"Show older posts",onclick:(e)=>{ busy(e.target); loadOlder().catch(err=>toast(errText(err))); }})) : null);
+  app().replaceChildren(h("div",{class:"grid"}, h("div",{}, composerEl, feed), h("aside",{class:"side"}, sidebar())));
+  if (selRange && document.body.contains(active)){ active.focus(); try { active.setSelectionRange(...selRange); } catch(e){} }
+}
+function postCard(p){
+  const me = S.me.id, admin = S.me.role === "admin";
+  const likers = S.likes.get(p.id) || [], liked = likers.includes(me);
+  const cmts = S.comments.get(p.id) || [];
+  const grants = S.grants.get(p.id) || [];
+  const canRemove = admin || (p.author === me && !grants.length);
+  const canGive = admin && p.recipients.some(r => r !== me && P(r).active);
+  let cin = cInputs.get(p.id);
+  if (!cin){
+    cin = h("input",{class:"input",maxlength:"500",placeholder:"Write a comment…"}); cin.dataset.cin = p.id;
+    cin.addEventListener("keydown", e => { if (e.key === "Enter"){ e.preventDefault(); addComment(p.id, cin); } });
+    cInputs.set(p.id, cin);
+  }
+  const img = p.image_path && S.urls.get(p.image_path);
+  return h("article",{class:"card post" + (grants.length ? " award" : "")},
+    h("div",{class:"pad"},
+      h("div",{class:"head"}, avatar(p.author),
+        h("div",{style:"flex:1;min-width:0"},
+          h("div",{}, h("b",{text:P(p.author).full_name}), " recognized ", nameList(p.recipients, 4)),
+          h("div",{class:"small muted",text:ago(p.created_at) + (P(p.author).title ? " · " + P(p.author).title : "")}))),
+      (p.core_value || grants.length) ? h("div",{class:"row wrapf",style:"margin-top:10px;gap:6px"},
+        p.core_value ? h("span",{class:"chip",text:p.core_value}) : null,
+        grants.map(g => h("span",{class:"chip gold",title:"Added by " + P(g.given_by).full_name + " · " + ago(g.created_at)},
+          "+" + g.points_each + " pts" + (g.recipients.length > 1 ? " each" : "") + (g.recipients.length < p.recipients.length ? " to " + g.recipients.map(r => P(r).full_name.split(" ")[0]).join(", ") : "") + " from " + P(g.given_by).full_name.split(" ")[0],
+          admin ? h("button",{type:"button",title:"Remove these points","aria-label":"Remove these points",text:"×",onclick:()=>removeGrant(g)}) : null))) : null,
+      h("div",{class:"text",text:p.body}),
+      img ? h("img",{class:"photo",src:img.url,alt:"Photo shared with this shout-out",loading:"lazy",onclick:()=>modal(h("img",{class:"full",src:img.url,alt:""}))}) : null,
+      h("div",{class:"actions"},
+        h("button",{class:"btn ghost like" + (liked ? " on" : ""), onclick:(e)=>toggleLike(p.id, liked, e.currentTarget)}, (liked ? "♥ " : "♡ ") + (likers.length ? likers.length + " " : "") + (likers.length === 1 || !likers.length ? "Like" : "Likes")),
+        h("button",{class:"btn ghost", onclick:()=>cin.focus()}, "💬 " + (cmts.length ? cmts.length + " " : "") + (cmts.length === 1 || !cmts.length ? "Comment" : "Comments")),
+        canGive ? h("button",{class:"btn ghost",style:"color:var(--gold-ink);font-weight:700",onclick:()=>addPointsForm(p)}, "★ Add points") : null,
+        h("span",{class:"sp"}),
+        canRemove ? h("button",{class:"btn ghost danger small",onclick:()=>removePost(p)},"Remove") : null),
+      likers.length ? h("div",{class:"likers"}, "♥ Liked by ", nameList(likers, 3)) : null,
+      cmts.length ? h("div",{class:"comments"}, cmts.map(c => h("div",{class:"cmt"}, avatar(c.author,"av sm"),
+        h("div",{class:"bub"}, h("b",{text:P(c.author).full_name}), h("span",{class:"small muted",text:" · " + ago(c.created_at)}), h("div",{text:c.body})),
+        (c.author === me || admin) ? h("button",{class:"x",title:"Delete comment",text:"✕",onclick:()=>removeComment(c)}) : null))) : null,
+      h("div",{class:"addc"}, avatar(me,"av sm"), cin, h("button",{class:"btn",text:"Post",onclick:()=>addComment(p.id, cin)}))));
+}
+async function toggleLike(postId, liked, btn){
+  btn.disabled = true;
+  try {
+    if (liked) await q(sb.from("likes").delete().eq("post_id", postId).eq("user_id", S.me.id));
+    else await q(sb.from("likes").insert({ post_id: postId, user_id: S.me.id }));
+    const arr = S.likes.get(postId) || []; S.likes.set(postId, liked ? arr.filter(x => x !== S.me.id) : [...arr, S.me.id]); render();
+  } catch(e){ btn.disabled = false; toast(errText(e)); }
+}
+async function addComment(postId, input){
+  const body = input.value.trim(); if (!body) return;
+  input.value = "";
+  try {
+    const row = await q(sb.from("comments").insert({ post_id: postId, author: S.me.id, body }).select().single());
+    const arr = S.comments.get(postId) || []; S.comments.set(postId, [...arr, row]); render();
+  } catch(e){ input.value = body; toast(errText(e)); }
+}
+function removeComment(c){
+  confirmBox("Delete this comment?", "This can't be undone.", "Delete", async () => {
+    await q(sb.from("comments").delete().eq("id", c.id));
+    S.comments.set(c.post_id, (S.comments.get(c.post_id)||[]).filter(x => x.id !== c.id)); render();
+  }, true);
+}
+function removePost(p){
+  confirmBox("Remove this post?", (S.grants.get(p.id) || []).length ? "The points attached to it will be taken back from the people it recognized." : "This can't be undone.", "Remove", async () => {
+    await q(sb.from("posts").delete().eq("id", p.id));
+    if (p.image_path) sb.storage.from("photos").remove([p.image_path]).catch(()=>{});
+    await refresh();
+  }, true);
+}
+
+function addPointsForm(p){
+  const people = p.recipients.filter(r => r !== S.me.id && P(r).active);
+  const boxes = people.map(id => ({ id, cb: h("input",{type:"checkbox",checked:true}) }));
+  const pts = h("input",{class:"input",type:"number",min:"1",step:"5",value:"25",style:"max-width:140px"});
+  const total = h("div",{class:"small muted"});
+  const upd = () => { const n = boxes.filter(b => b.cb.checked).length, v = Math.max(0, Math.floor(+pts.value || 0));
+    total.textContent = n ? "Total: " + fmtPts(v*n) + " (" + money(v*n) + ")" : "Pick at least one person."; };
+  pts.oninput = upd; boxes.forEach(b => b.cb.onchange = upd); upd();
+  const quick = h("div",{class:"vals",style:"margin-top:8px"}, [5,10,25,50,100].map(v => h("button",{type:"button",text:String(v),onclick:()=>{ pts.value = String(v); upd(); }})));
+  const save = h("button",{class:"btn gold",text:"Add points"});
+  save.onclick = async () => {
+    const to = boxes.filter(b => b.cb.checked).map(b => b.id), v = Math.floor(+pts.value);
+    if (!to.length) return toast("Pick at least one person.");
+    if (!(v >= 1)) return toast("Enter at least 1 point.");
+    busy(save, "Adding…");
+    try { await q(sb.rpc("add_points", { p_post:p.id, p_recipients:to, p_points:v })); closeModal(); toast("Points added ⭐"); await refresh(); }
+    catch(e){ unbusy(save); toast(errText(e)); }
+  };
+  modal(h("div",{class:"card"},
+    h("h3",{text:"Add points to this post",style:"font-size:22px;margin-bottom:4px"}),
+    h("div",{class:"small muted ell",style:"margin-bottom:12px",text:"“" + p.body + "”"}),
+    h("label",{class:"f",text: people.length > 1 ? "Who gets points" : "Gets points"}),
+    h("div",{style:"display:flex;flex-direction:column;gap:8px"}, boxes.map(b => h("label",{class:"row",style:"gap:8px;cursor:pointer"}, b.cb, avatar(b.id,"av sm"), P(b.id).full_name,
+      h("span",{class:"small muted",text:P(b.id).title})))),
+    h("div",{class:"fld"}, h("label",{class:"f",text:"Points for each person"}), pts, quick, h("div",{style:"margin-top:6px"}, total)),
+    h("div",{class:"row",style:"justify-content:flex-end;margin-top:18px"}, h("button",{class:"btn",text:"Cancel",onclick:closeModal}), save)));
+  setTimeout(()=>pts.select(), 50);
+}
+function removeGrant(g){
+  confirmBox("Remove these points?", g.points_each + " pts each will be taken back from " + g.recipients.map(r => P(r).full_name).join(", ") + ".", "Remove points", async () => {
+    await q(sb.rpc("remove_points", { p_id:g.id })); await refresh();
+  }, true);
+}
+
+function celebrationsCard(){
+  const list = upcomingCelebrations(14).filter(c => !S.facilityFilter || c.p.facility === S.facilityFilter).slice(0, 8);
+  if (!list.length) return null;
+  const whenText = c => c.diff === 0 ? "Today!" : c.diff === 1 ? "Tomorrow" : c.when.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});
+  return h("div",{class:"card pad"},
+    h("h3",{text:"Celebrations",style:"font-size:19px"}),
+    h("div",{class:"lb"}, list.map(c => h("div",{class:"row"},
+      h("span",{style:"font-size:22px;width:28px;text-align:center",text: c.kind === "bday" ? "🎂" : "🎉"}),
+      h("div",{style:"flex:1;min-width:0"},
+        h("div",{class:"ell",style:"font-weight:500",text:c.p.full_name}),
+        h("div",{class:"small " + (c.diff === 0 ? "" : "muted"),style: c.diff === 0 ? "color:var(--pri);font-weight:700" : "",
+          text:(c.kind === "bday" ? "Birthday" : c.yrs + "-year work anniversary") + " · " + whenText(c)})),
+      c.p.id !== S.me.id && c.diff <= 1 ? h("button",{class:"btn ghost small",title:"Give a shout-out",text:"Celebrate",onclick:()=>celebrate(c)}) : null))));
+}
+function celebrate(c){
+  if (!composerEl) return;
+  composerEl._picker.clear(); composerEl._picker.add(c.p.id);
+  const first = c.p.full_name.split(" ")[0];
+  if (!composerEl._text.value.trim()) composerEl._text.value = c.kind === "bday" ? "Happy birthday, " + first + "! 🎂 " : "Happy " + c.yrs + "-year work anniversary, " + first + "! 🎉 Thank you for ";
+  window.scrollTo({ top:0, behavior:"smooth" });
+  composerEl._text.focus(); const n = composerEl._text.value.length; composerEl._text.setSelectionRange(n, n);
+}
+
+/* ---------- sidebar ---------- */
+function sidebar(){
+  const lb = new Map();
+  for (const p of S.month) for (const r of p.recipients){ const e = lb.get(r) || {n:0, pts:0}; e.n++; lb.set(r, e); }
+  for (const g of S.monthGrants) for (const r of g.recipients){ const e = lb.get(r) || {n:0, pts:0}; e.pts += g.points_each; lb.set(r, e); }
+  const top = [...lb.entries()].filter(([id]) => !S.facilityFilter || P(id).facility === S.facilityFilter)
+    .sort((a,b) => b[1].pts - a[1].pts || b[1].n - a[1].n).slice(0,6);
+  return [
+    h("div",{class:"card pad"},
+      h("div",{class:"small muted",text:"Your balance"}),
+      h("div",{class:"row",style:"align-items:baseline;gap:8px;margin-top:4px"}, h("span",{class:"big",text:Number(S.mine.balance).toLocaleString()}), h("span",{class:"muted",text:"pts · worth " + money(S.mine.balance)})),
+      h("a",{href:"#rewards",class:"btn gold full",style:"margin-top:12px",text:"Browse rewards"})),
+    celebrationsCard(),
+    h("div",{class:"card pad"},
+      h("h3",{text:"Most recognized this month",style:"font-size:19px"}),
+      top.length ? h("div",{class:"lb"}, top.map(([id,e],i) => h("div",{class:"row"}, h("span",{class:"n",text:String(i+1)}), avatar(id,"av sm"),
+        h("div",{style:"flex:1;min-width:0"}, h("div",{class:"ell",style:"font-weight:500",text:P(id).full_name}),
+          h("div",{class:"small muted",text: e.n + " shout-out" + (e.n===1?"":"s") + (e.pts ? " · " + fmtPts(e.pts) : "")})))))
+        : h("p",{class:"muted small",text:"No shout-outs yet this month."})),
+    h("div",{class:"card pad small muted"},
+      h("b",{text:"How it works",style:"color:var(--ink)"}),
+      h("p",{style:"margin:6px 0 0",text:"Give a shout-out whenever a coworker does something great. Leadership adds points to shout-outs, and points you receive are yours to trade for gift cards on the Rewards page. 100 pts = " + money(100) + "."}))
+  ];
+}
+
+/* ---------- rewards ---------- */
+function renderRewards(){
+  const bal = Number(S.mine.balance);
+  const list = S.rewards.filter(r => r.active);
+  app().replaceChildren(
+    h("h1",{text:"Rewards",style:"font-size:32px"}),
+    h("div",{class:"muted",text:"Trade your points for gift cards and perks. You have " + fmtPts(bal) + " (" + money(bal) + ")."}),
+    list.length ? h("div",{class:"rgrid"}, list.map(r => { const short = r.cost - bal;
+      return h("div",{class:"card reward"}, h("div",{class:"art",text:r.emoji || "🎁"}),
+        h("div",{class:"body"}, h("h3",{text:r.name,style:"font-size:19px"}), r.description ? h("div",{class:"small muted",text:r.description}) : null, h("span",{class:"sp"}),
+          h("div",{class:"row"}, h("span",{class:"cost",text:fmtPts(r.cost)}), h("span",{class:"sp"}),
+            h("button",{class:"btn " + (short <= 0 ? "primary" : ""), disabled: short > 0, onclick:()=>redeem(r)}, short > 0 ? short + " more pts" : "Redeem")))); }))
+      : h("div",{class:"card empty",style:"margin-top:16px",text:"No rewards are available right now."}),
+    h("p",{class:"small muted",style:"margin-top:18px",text:"When you redeem, your request goes to the program administrator, who will get your gift card to you. Points are held while it's pending and returned if it's declined."}));
+}
+function redeem(r){
+  const bal = Number(S.mine.balance);
+  confirmBox("Redeem " + r.name + "?", fmtPts(r.cost) + " will come out of your balance (" + fmtPts(bal) + " → " + fmtPts(bal - r.cost) + "). Your administrator will get the gift card to you.", "Redeem", async () => {
+    await q(sb.rpc("redeem", { p_reward: r.id })); toast("Request sent! 🎁"); await refresh();
+  });
+}
+
+/* ---------- wallet ---------- */
+function statusChip(s){ return s === "sent" ? h("span",{class:"chip ok",text:"Sent"}) : s === "declined" ? h("span",{class:"chip red",text:"Declined, points returned"}) : h("span",{class:"chip gold",text:"Pending"}); }
+function renderWallet(){
+  const rows = S.myHistory.map(r => h("tr",{},
+    h("td",{class:"small muted",text:dateStr(r.at)}),
+    h("td",{}, r.kind === "in" ? ["Points from " + P(r.by).full_name + (r.value ? " · " + r.value : ""), r.author ? h("div",{class:"small muted"}, "on a shout-out from ", P(r.author).full_name) : null]
+             : [r.label, r.note ? h("div",{class:"small muted",text:"Note: " + r.note}) : null]),
+    h("td",{}, r.kind === "out" ? statusChip(r.status) : null),
+    h("td",{class:"num"}, r.kind === "in" ? h("span",{class:"plus",text:"+" + r.pts}) : h("span",{class: r.status === "declined" ? "muted" : "minus",text:"−" + r.pts}))));
+  app().replaceChildren(
+    h("h1",{text:"My points",style:"font-size:32px;margin-bottom:14px"}),
+    h("div",{class:"rgrid",style:"margin-top:0"},
+      h("div",{class:"card pad"}, h("div",{class:"small muted",text:"Balance"}), h("div",{class:"big",text:Number(S.mine.balance).toLocaleString()}), h("div",{class:"small muted",text:"worth " + money(S.mine.balance)})),
+      h("div",{class:"card pad"}, h("div",{class:"small muted",text:"Received all-time"}), h("div",{class:"big",text:Number(S.mine.received).toLocaleString()})),
+      h("div",{class:"card pad"}, h("div",{class:"small muted",text:"Redeemed"}), h("div",{class:"big",text:Number(S.mine.redeemed).toLocaleString()}))),
+    h("div",{class:"card sec",style:"overflow-x:auto"},
+      rows.length ? h("table",{}, h("thead",{}, h("tr",{}, h("th",{text:"Date"}), h("th",{text:"Activity"}), h("th",{text:"Status"}), h("th",{class:"num",text:"Points"}))), h("tbody",{}, rows))
+                  : h("div",{class:"empty",text:"No activity yet. Points you receive and rewards you redeem will show up here."})));
+}
+
+/* =================== admin =================== */
+const ADMIN_TABS = [["requests","Gift card requests"],["employees","Employees"],["rewards","Rewards catalog"],["settings","Settings"],["report","Points report"]];
+let adminCache = {};
+function renderAdmin(){
+  const pending = S.admin.reds.filter(r => r.status === "pending").length;
+  const nav = h("div",{class:"subnav"}, ADMIN_TABS.map(([k,l]) => h("button",{class: S.adminTab === k ? "on" : "", onclick:()=>{ S.adminTab = k; render(); }}, l, k === "requests" && pending ? h("span",{class:"count",text:String(pending)}) : null)));
+  let body;
+  if (S.adminTab === "requests") body = adminRequests();
+  else if (S.adminTab === "employees") body = adminEmployees();
+  else if (S.adminTab === "rewards") body = adminRewards();
+  else if (S.adminTab === "settings") body = adminCache.settings || (adminCache.settings = adminSettings());
+  else body = adminReport();
+  if (body._refresh) body._refresh();
+  app().replaceChildren(h("h1",{text:"Admin",style:"font-size:32px"}), nav, h("div",{class:"sec",style:"margin-top:14px"}, body));
+}
+function adminRequests(){
+  const pend = S.admin.reds.filter(r => r.status === "pending").slice().reverse();
+  const done = S.admin.reds.filter(r => r.status !== "pending").slice(0, 25);
+  const bal = id => Number((S.admin.summary.get(id) || {}).balance || 0);
+  return h("div",{},
+    h("p",{class:"muted",style:"margin-top:0",text:"Buy the gift card, get it to the employee (email, text or printed code), then mark it sent. Declining returns their points."}),
+    h("div",{class:"card",style:"overflow-x:auto"},
+      pend.length ? h("table",{}, h("thead",{}, h("tr",{}, h("th",{text:"Employee"}), h("th",{text:"Reward"}), h("th",{text:"Requested"}), h("th",{text:"Note to employee"}), h("th",{}))),
+        h("tbody",{}, pend.map(r => { const note = h("input",{class:"input",placeholder:"Optional",style:"min-width:150px"});
+          return h("tr",{},
+            h("td",{}, h("div",{class:"row"}, avatar(r.user_id,"av sm"), h("div",{}, h("div",{style:"font-weight:500",text:P(r.user_id).full_name}), h("div",{class:"small muted",text:[P(r.user_id).title, P(r.user_id).facility].filter(Boolean).join(" · ")})))),
+            h("td",{}, r.reward_name, h("div",{class:"small muted",text:fmtPts(r.cost) + " · " + money(r.cost)}), bal(r.user_id) < 0 ? h("span",{class:"chip red",text:"⚠ balance is negative"}) : null),
+            h("td",{class:"small muted",text:ago(r.created_at)}),
+            h("td",{}, note),
+            h("td",{style:"white-space:nowrap"}, h("button",{class:"btn primary",onclick:(e)=>setStatus(r,"sent",note.value,e.currentTarget)},"Mark sent"), " ",
+              h("button",{class:"btn danger",onclick:(e)=>setStatus(r,"declined",note.value,e.currentTarget)},"Decline"))); })))
+        : h("div",{class:"empty",text:"No pending requests. 🎉"})),
+    done.length ? h("div",{class:"sec"}, h("h2",{text:"Recently handled",style:"font-size:19px;margin-bottom:8px"}),
+      h("div",{class:"card",style:"overflow-x:auto"}, h("table",{}, h("tbody",{}, done.map(r => h("tr",{},
+        h("td",{text:P(r.user_id).full_name}), h("td",{text:r.reward_name}), h("td",{}, statusChip(r.status)),
+        h("td",{class:"small muted",text: r.handled_at ? dateStr(r.handled_at) + (r.handled_by ? " by " + P(r.handled_by).full_name : "") : ""}),
+        h("td",{class:"small muted",text:r.note || ""}),
+        h("td",{}, h("button",{class:"btn ghost small",text:"Undo",onclick:(e)=>setStatus(r,"pending","",e.currentTarget)}))))))))
+      : null);
+}
+async function setStatus(r, status, note, btn){
+  busy(btn, "");
+  try { await q(sb.rpc("set_redemption_status", { p_id:r.id, p_status:status, p_note:note || "" }));
+    toast(status === "sent" ? "Marked as sent" : status === "declined" ? "Declined, points returned" : "Moved back to pending");
+    await refresh(); }
+  catch(e){ unbusy(btn); toast(errText(e)); }
+}
+
+/* ---- employees ---- */
+let empSearch = "", empShowInactive = false;
+function adminEmployees(){
+  const list = [...S.people.values()].filter(p => (empShowInactive || p.active) &&
+    (!empSearch || (p.full_name + " " + p.username + " " + p.title + " " + p.facility).toLowerCase().includes(empSearch.toLowerCase())))
+    .sort((a,b) => a.full_name.localeCompare(b.full_name));
+  const search = h("input",{class:"input search",placeholder:"Search employees",value:empSearch});
+  search.oninput = () => { empSearch = search.value; const pos = search.selectionStart; render(); const s = document.querySelector(".search"); if (s){ s.focus(); s.setSelectionRange(pos,pos); } };
+  const inactive = h("input",{type:"checkbox",checked:empShowInactive,onchange:(e)=>{ empShowInactive = e.target.checked; render(); }});
+  const total = [...S.people.values()].filter(p => p.active).length;
+  return h("div",{},
+    h("div",{class:"row wrapf",style:"margin-bottom:12px"}, search, h("label",{class:"row small muted",style:"gap:6px;cursor:pointer"}, inactive, "Show deactivated"), h("span",{class:"sp"}),
+      h("span",{class:"small muted",text: total + " active"}), h("button",{class:"btn primary",text:"+ Add employee",onclick:()=>employeeForm(null)})),
+    h("div",{class:"card",style:"overflow-x:auto"},
+      list.length ? h("table",{}, h("thead",{}, h("tr",{}, h("th",{text:"Name"}), h("th",{text:"Username"}), h("th",{text:"Title"}), h("th",{text:"Facility"}), h("th",{text:"Birthday"}), h("th",{text:"Hired"}), h("th",{}), h("th",{}))),
+        h("tbody",{}, list.map(p => h("tr",{class: p.active ? "" : "off"},
+          h("td",{}, h("div",{class:"row"}, avatar(p.id,"av xs"), h("span",{style:"font-weight:500",text:p.full_name}))),
+          h("td",{class:"small",text:p.username}), h("td",{class:"small",text:p.title}), h("td",{class:"small",text:p.facility}),
+          h("td",{class:"small",text:bdayText(p)}), h("td",{class:"small",text:hireText(p)}),
+          h("td",{}, p.role === "admin" ? h("span",{class:"chip",text:"Admin"}) : null, !p.active ? h("span",{class:"chip grey",text:"Deactivated"}) : null),
+          h("td",{style:"white-space:nowrap"}, h("button",{class:"btn ghost",text:"Edit",onclick:()=>employeeForm(p)}))))))
+        : h("div",{class:"empty",text: empSearch ? "No one matches that search." : "No employees yet. Add your first one!"})),
+    h("p",{class:"small muted",text:"Tip: when someone leaves, deactivate them instead of deleting. Their past shout-outs stay in the feed, but they can no longer sign in."}));
+}
+function facilitySelect(value){
+  const facs = S.settings.facilities || [];
+  const sel = h("select",{class:"input"}, h("option",{value:"",text:"—"}), facs.map(f => h("option",{value:f,text:f})));
+  if (value && !facs.includes(value)) sel.append(h("option",{value,text:value}));
+  sel.value = value || (facs.length === 1 ? facs[0] : "");
+  return sel;
+}
+function employeeForm(p){
+  const isNew = !p;
+  const name = h("input",{class:"input",maxlength:"80",value: p ? p.full_name : ""});
+  const user = h("input",{class:"input",maxlength:"40",value: p ? p.username : "",autocapitalize:"none",spellcheck:"false"});
+  if (isNew){ let touched = false; user.oninput = () => touched = true; name.oninput = () => { if (!touched) user.value = usernameFrom(name.value); }; }
+  else user.disabled = true;
+  const title = h("input",{class:"input",maxlength:"80",value: p ? p.title : "",placeholder:"e.g. CNA, LPN, Dietary Aide"});
+  const fac = facilitySelect(p ? p.facility : "");
+  const admin = h("input",{type:"checkbox",checked: p ? p.role === "admin" : false});
+  const active = h("input",{type:"checkbox",checked: p ? p.active : true});
+  const pw = h("input",{class:"input",value: tempPassword()});
+  const bm = h("select",{class:"input"}, h("option",{value:"",text:"Month"}), MONTHS.map((m,i) => h("option",{value:String(i+1),text:m})));
+  const bd = h("select",{class:"input",style:"max-width:90px"}, h("option",{value:"",text:"Day"}), Array.from({length:31},(_,i) => h("option",{value:String(i+1),text:String(i+1)})));
+  bm.value = p && p.birth_month ? String(p.birth_month) : ""; bd.value = p && p.birth_day ? String(p.birth_day) : "";
+  const hire = h("input",{class:"input",type:"date",value: p && p.hire_date ? p.hire_date : ""});
+  const err = h("div",{class:"small",style:"color:var(--red);min-height:1em;margin-top:8px"});
+  const save = h("button",{class:"btn primary",text: isNew ? "Create account" : "Save"});
+  save.onclick = async () => {
+    err.textContent = "";
+    busy(save, "Saving…");
+    try {
+      if ((bm.value === "") !== (bd.value === "")) throw new Error("Pick both the birthday month and day, or leave both blank.");
+      const dates = id => q(sb.rpc("admin_set_dates", { p_user:id, p_birth_month: bm.value ? +bm.value : null, p_birth_day: bd.value ? +bd.value : null, p_hire_date: hire.value || null }));
+      if (isNew){
+        const id = await q(sb.rpc("admin_create_user", { p_username:user.value.trim().toLowerCase(), p_full_name:name.value, p_title:title.value, p_facility:fac.value, p_password:pw.value, p_admin:admin.checked }));
+        try { await dates(id); } catch(e){ toast("Account created, but the dates weren't saved: " + errText(e)); }
+        await refresh(); showCreds(name.value.trim(), user.value.trim().toLowerCase(), pw.value, true);
+      } else {
+        await q(sb.rpc("admin_update_user", { p_user:p.id, p_full_name:name.value, p_title:title.value, p_facility:fac.value, p_admin:admin.checked, p_active:active.checked }));
+        await dates(p.id);
+        closeModal(); toast("Saved"); await refresh();
+      }
+    } catch(e){ unbusy(save); err.textContent = errText(e); }
+  };
+  const reset = !isNew ? h("button",{class:"btn",text:"Reset password",onclick:()=>{
+    const np = tempPassword();
+    confirmBox("Reset " + p.full_name + "'s password?", "They'll get a new temporary password and must choose their own the next time they sign in.", "Reset", async () => {
+      await q(sb.rpc("admin_reset_password", { p_user:p.id, p_password:np })); setTimeout(()=>showCreds(p.full_name, p.username, np, false), 0);
+    });
+  }}) : null;
+  modal(h("div",{class:"card"},
+    h("h3",{text: isNew ? "Add employee" : "Edit " + p.full_name,style:"font-size:22px;margin-bottom:4px"}),
+    h("div",{class:"fld"}, h("label",{class:"f",text:"Full name"}), name),
+    h("div",{class:"two fld"}, h("div",{}, h("label",{class:"f",text:"Username (for signing in)"}), user), h("div",{}, h("label",{class:"f",text:"Job title"}), title)),
+    h("div",{class:"fld"}, h("label",{class:"f",text:"Facility"}), fac),
+    h("div",{class:"two fld"},
+      h("div",{}, h("label",{class:"f",text:"Birthday (no year needed)"}), h("div",{class:"row",style:"gap:6px"}, bm, bd)),
+      h("div",{}, h("label",{class:"f",text:"Hire date (for work anniversaries)"}), hire)),
+    isNew ? h("div",{class:"fld"}, h("label",{class:"f",text:"Temporary password"}), pw, h("div",{class:"small muted",text:"They'll be asked to choose their own the first time they sign in."})) : null,
+    h("label",{class:"row fld",style:"gap:8px;cursor:pointer"}, admin, "Admin (can manage employees, rewards and requests)"),
+    !isNew ? h("label",{class:"row",style:"gap:8px;cursor:pointer;margin-top:8px"}, active, "Active (can sign in)") : null,
+    err,
+    h("div",{class:"row",style:"margin-top:14px"}, reset, h("span",{class:"sp"}), h("button",{class:"btn",text:"Cancel",onclick:closeModal}), save)));
+  setTimeout(()=>name.focus(), 50);
+}
+function showCreds(name, username, pw, isNew){
+  const url = location.origin + location.pathname;
+  const text = "Revive Rewards login for " + name + "\nWebsite: " + url + "\nUsername: " + username + "\nTemporary password: " + pw + "\nYou'll choose your own password the first time you sign in.";
+  modal(h("div",{class:"card"},
+    h("h3",{text: isNew ? "Account created ✅" : "Password reset ✅",style:"font-size:22px"}),
+    h("p",{class:"muted",text:"Give these to " + name + ". The temporary password won't be shown again."}),
+    h("div",{class:"creds",text:text}),
+    h("div",{class:"row"}, h("button",{class:"btn",text:"Copy",onclick:()=>copyText(text)}), h("button",{class:"btn",text:"Print",onclick:()=>printSlip(text)}), h("span",{class:"sp"}),
+      isNew ? h("button",{class:"btn",text:"Add another",onclick:()=>employeeForm(null)}) : null, h("button",{class:"btn primary",text:"Done",onclick:closeModal}))));
+}
+function printSlip(text){
+  const w = window.open("", "_blank", "width=480,height=420"); if (!w) return toast("Allow pop-ups to print.");
+  w.document.write("<pre style='font:16px/1.6 monospace;padding:24px;white-space:pre-wrap'></pre>"); w.document.querySelector("pre").textContent = text;
+  w.document.close(); w.focus(); w.print();
+}
+
+/* ---- rewards catalog ---- */
+function adminRewards(){
+  return h("div",{},
+    h("div",{class:"card",style:"overflow-x:auto"},
+      S.rewards.length ? h("table",{}, h("thead",{}, h("tr",{}, h("th",{}), h("th",{text:"Reward"}), h("th",{class:"num",text:"Cost"}), h("th",{class:"num",text:"Value"}), h("th",{}), h("th",{}))),
+        h("tbody",{}, S.rewards.map(r => h("tr",{class: r.active ? "" : "off"},
+          h("td",{style:"font-size:24px",text:r.emoji}), h("td",{}, h("div",{style:"font-weight:500",text:r.name}), r.description ? h("div",{class:"small muted",text:r.description}) : null),
+          h("td",{class:"num",text:fmtPts(r.cost)}), h("td",{class:"num muted",text:money(r.cost)}),
+          h("td",{}, r.active ? h("span",{class:"chip ok",text:"Shown"}) : h("span",{class:"chip grey",text:"Hidden"})),
+          h("td",{style:"white-space:nowrap"}, h("button",{class:"btn ghost",text:"Edit",onclick:()=>rewardForm(r)}),
+            h("button",{class:"btn ghost danger",text:"Delete",onclick:()=>confirmBox("Delete " + r.name + "?", "Past requests for it are kept. To take it off the catalog for now, edit it and uncheck “Show” instead.", "Delete", async()=>{ await q(sb.from("rewards").delete().eq("id", r.id)); await refresh(); }, true)}))))))
+        : h("div",{class:"empty",text:"No rewards yet."})),
+    h("div",{style:"margin-top:10px"}, h("button",{class:"btn primary",text:"+ Add reward",onclick:()=>rewardForm(null)})));
+}
+function rewardForm(r){
+  const name = h("input",{class:"input",maxlength:"80",value: r ? r.name : "",placeholder:"e.g. Amazon $25 gift card"});
+  const desc = h("input",{class:"input",maxlength:"240",value: r ? r.description : "",placeholder:"Short description (optional)"});
+  const emoji = h("input",{class:"input emo",maxlength:"8",value: r ? r.emoji : "🎁"});
+  const cost = h("input",{class:"input",type:"number",min:"1",value: r ? String(r.cost) : "250"});
+  const hint = h("div",{class:"small muted"}); const upd = () => hint.textContent = +cost.value > 0 ? "= " + money(+cost.value) : ""; cost.oninput = upd; upd();
+  const active = h("input",{type:"checkbox",checked: r ? r.active : true});
+  const save = h("button",{class:"btn primary",text:"Save"});
+  save.onclick = async () => {
+    const c = Math.floor(+cost.value);
+    if (!name.value.trim()) return toast("Give the reward a name.");
+    if (!(c >= 1)) return toast("Cost must be at least 1 point.");
+    busy(save, "Saving…");
+    const row = { name:name.value.trim(), description:desc.value.trim(), emoji:emoji.value.trim() || "🎁", cost:c, active:active.checked };
+    try { if (r) await q(sb.from("rewards").update(row).eq("id", r.id));
+          else await q(sb.from("rewards").insert({ ...row, sort: (S.rewards.reduce((m,x)=>Math.max(m,x.sort||0),0) + 1) }));
+      closeModal(); toast("Saved"); await refresh(); }
+    catch(e){ unbusy(save); toast(errText(e)); }
+  };
+  modal(h("div",{class:"card"},
+    h("h3",{text: r ? "Edit reward" : "Add reward",style:"font-size:22px;margin-bottom:6px"}),
+    h("div",{class:"row fld",style:"align-items:flex-end"}, h("div",{}, h("label",{class:"f",text:"Icon"}), emoji), h("div",{style:"flex:1"}, h("label",{class:"f",text:"Name"}), name)),
+    h("div",{class:"fld"}, h("label",{class:"f",text:"Description"}), desc),
+    h("div",{class:"fld"}, h("label",{class:"f",text:"Cost in points"}), cost, hint),
+    h("label",{class:"row fld",style:"gap:8px;cursor:pointer"}, active, "Show in the catalog"),
+    h("div",{class:"row",style:"justify-content:flex-end;margin-top:18px"}, h("button",{class:"btn",text:"Cancel",onclick:closeModal}), save)));
+}
+
+/* ---- settings ---- */
+function adminSettings(){
+  const name = h("input",{class:"input",maxlength:"60"});
+  const cents = h("input",{class:"input",type:"number",min:"0.1",step:"0.1"});
+  const vals = h("textarea",{class:"input",style:"min-height:150px"});
+  const facs = h("textarea",{class:"input",style:"min-height:110px"});
+  let dirty = false; [name, cents, vals, facs].forEach(x => x.addEventListener("input", () => dirty = true));
+  const save = h("button",{class:"btn primary",text:"Save settings"});
+  save.onclick = async () => {
+    const pc = +cents.value;
+    if (!(pc > 0)) return toast("Point value must be more than 0.");
+    const lines = t => t.value.split("\n").map(s => s.trim()).filter(Boolean).slice(0, 30);
+    busy(save, "Saving…");
+    try { await q(sb.from("settings").update({ program_name: name.value.trim() || "Revive Rewards", point_value_cents:pc, core_values:lines(vals), facilities:lines(facs) }).eq("id",1));
+      dirty = false; toast("Settings saved"); await refresh(); }
+    catch(e){ toast(errText(e)); }
+    unbusy(save);
+  };
+  const el = h("div",{class:"card pad"},
+    h("div",{class:"two"},
+      h("div",{}, h("label",{class:"f",text:"Program name"}), name),
+      h("div",{}, h("label",{class:"f",text:"Value of 1 point, in cents"}), cents, h("div",{class:"small muted",text:"10 means 100 pts = $10"})),
+      h("div",{}, h("label",{class:"f",text:"Values staff can tag (one per line)"}), vals),
+      h("div",{}, h("label",{class:"f",text:"Facilities (one per line)"}), facs, h("div",{class:"small muted",text:"With more than one, the feed gets a facility filter."}))),
+    h("div",{class:"row",style:"margin-top:14px"}, h("span",{class:"sp"}), save));
+  el._refresh = () => { if (dirty) return; const s = S.settings;
+    name.value = s.program_name; cents.value = String(s.point_value_cents);
+    vals.value = (s.core_values||[]).join("\n"); facs.value = (s.facilities||[]).join("\n"); };
+  return el;
+}
+
+/* ---- report ---- */
+function adminReport(){
+  const rows = [...S.people.values()].map(p => { const s = S.admin.summary.get(p.id) || {}; return { p, rec:Number(s.received||0), red:Number(s.redeemed||0), bal:Number(s.balance||0) }; })
+    .filter(r => r.p.active || r.rec || r.red).sort((a,b) => b.bal - a.bal || a.p.full_name.localeCompare(b.p.full_name));
+  const owed = rows.reduce((s,r) => s + Math.max(0, r.bal), 0);
+  const pendingCost = S.admin.reds.filter(r => r.status === "pending").reduce((s,r) => s + r.cost, 0);
+  const csv = () => ["Name,Username,Title,Facility,Birthday,Hire date,Active,Received,Redeemed,Balance,Balance ($)",
+    ...rows.map(r => [r.p.full_name, r.p.username, r.p.title, r.p.facility, bdayText(r.p), r.p.hire_date || "", r.p.active ? "yes" : "no", r.rec, r.red, r.bal, (r.bal * S.settings.point_value_cents / 100).toFixed(2)]
+      .map(v => '"' + String(v).replace(/"/g,'""') + '"').join(","))].join("\n");
+  const download = () => { const a = h("a",{href:URL.createObjectURL(new Blob([csv()],{type:"text/csv"})),download:"revive-rewards-points-" + new Date().toISOString().slice(0,10) + ".csv"}); document.body.append(a); a.click(); a.remove(); };
+  return h("div",{},
+    h("div",{class:"rgrid",style:"margin-top:0;margin-bottom:16px"},
+      h("div",{class:"card pad"}, h("div",{class:"small muted",text:"Unspent points (all staff)"}), h("div",{class:"big",text:owed.toLocaleString()}), h("div",{class:"small muted",text:"worth " + money(owed)})),
+      h("div",{class:"card pad"}, h("div",{class:"small muted",text:"Waiting to be sent"}), h("div",{class:"big",text:money(pendingCost)}), h("div",{class:"small muted",text:fmtPts(pendingCost)})),
+      h("div",{class:"card pad"}, h("div",{class:"small muted",text:"This month"}), h("div",{class:"big",text:String(S.month.length)}), h("div",{class:"small muted",text:"shout-outs · " + fmtPts(S.monthGrants.reduce((t,g) => t + g.points_each * g.recipients.length, 0)) + " given (" + money(S.monthGrants.reduce((t,g) => t + g.points_each * g.recipients.length, 0)) + ")"}))),
+    h("div",{class:"row",style:"margin-bottom:10px"}, h("span",{class:"sp"}), h("button",{class:"btn",text:"Download CSV",onclick:download})),
+    h("div",{class:"card",style:"overflow-x:auto"},
+      rows.length ? h("table",{}, h("thead",{}, h("tr",{}, h("th",{text:"Employee"}), h("th",{text:"Facility"}), h("th",{class:"num",text:"Received"}), h("th",{class:"num",text:"Redeemed"}), h("th",{class:"num",text:"Balance"}))),
+        h("tbody",{}, rows.map(r => h("tr",{class: r.p.active ? "" : "off"}, h("td",{}, h("div",{class:"row"}, avatar(r.p.id,"av xs"), r.p.full_name)), h("td",{class:"small",text:r.p.facility}),
+          h("td",{class:"num",text:r.rec}), h("td",{class:"num",text:r.red}), h("td",{class:"num",style:"font-weight:700",text:r.bal})))))
+        : h("div",{class:"empty",text:"No points activity yet."})));
+}
+
+boot();
+</script>
+</body>
+</html>
