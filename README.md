@@ -29,13 +29,15 @@ Sign in with the username and temporary password from step 1.3, choose your own 
 
 ## Running the program
 
-**Admin → Employees:** add each staff member, with their birthday (month and day only, no year) and hire date if you'd like them to show up in the feed's **Celebrations** card. Birthdays and work anniversaries in the next two weeks appear there, with a **Celebrate** button that starts a shout-out. The site creates a username (like `maria.lopez`) and a temporary password, which you can copy or print to hand out. When someone leaves, edit them and uncheck **Active**. They can't sign in anymore, but their past posts stay.
+**Admin → Employees → ⬆ Import spreadsheet:** add everyone at once from Excel or CSV with columns **First Name, Last Name, Birthday, Hire Date, Building** (optional **Job Title**). You'll see a preview that flags problems before anything is created, then you can print login slips or download the logins. People who already have an account are skipped, so it's safe to import an updated list later.
+
+**Admin → Employees:** add or edit one staff member at a time, with their birthday (month and day only, no year) and hire date if you'd like them to show up in the feed's **Celebrations** card. Birthdays and work anniversaries in the next two weeks appear there, with a **Celebrate** button that starts a shout-out. The site creates a username (like `maria.lopez`) and a temporary password, which you can copy or print to hand out. When someone leaves, edit them and uncheck **Active**. They can't sign in anymore, but their past posts stay.
 
 **Admin → Gift card requests:** when someone redeems, buy the gift card, get them the code, then click **Mark sent**. **Decline** returns their points.
 
 **Giving points (admins only):** every post in the feed has a **★ Add points** button for admins. Choose who on the post gets points and how many. Admins can also include points when they write their own shout-out. To catch up on posts, check **Only posts without points** above the feed. Points show on the post as a gold tag (for example, "+25 pts from Ian"); click the × on the tag to take them back. Admins can't give points to themselves.
 
-**Admin → Settings:** point value (default 100 pts = $10), the values staff can tag, and the list of facilities.
+**Admin → Settings:** point value (default 100 pts = $10), the values staff can tag, and the list of buildings.
 
 **Admin → Points report:** everyone's balance and the total dollar value of unspent points. Download it as a CSV for Excel.
 
