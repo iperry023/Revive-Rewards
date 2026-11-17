@@ -661,7 +661,7 @@ function postCard(p){
       h("div",{class:"head"}, avatar(p.author),
         h("div",{style:"flex:1;min-width:0"},
           h("div",{}, h("b",{text:P(p.author).full_name}), p.author == null ? " is celebrating " : " recognized ", nameList(p.recipients, 4)),
-          h("div",{class:"small muted",text:ago(p.created_at) + (p.author == null ? " · Automatic celebration" : P(p.author).title ? " · " + P(p.author).title : "")}))),
+          h("div",{class:"small muted",text:ago(p.created_at) + (p.author != null && P(p.author).title ? " · " + P(p.author).title : "")}))),
       (p.core_value || grants.length) ? h("div",{class:"row wrapf",style:"margin-top:10px;gap:6px"},
         p.core_value ? h("span",{class:"chip",text:p.core_value}) : null,
         grants.map(g => h("span",{class:"chip gold",title:"Added by " + P(g.given_by).full_name + " · " + ago(g.created_at)},
@@ -1266,6 +1266,16 @@ function rewardForm(r){
 }
 
 /* ---- settings ---- */
+const isAdminTitle = t => /administrator/i.test(t || "") && !/assistant|in training|\bAIT\b/i.test(t || "");
+function autoSender(building){
+  const people = [...S.people.values()].filter(p => p.active && p.facility === building);
+  const home = /home office/i.test(building);
+  const cands = people.filter(p => home ? /owner/i.test(p.title || "") : isAdminTitle(p.title));
+  cands.sort((a,b) => (["administrator","owner/operator","owner / operator","owner operator"].includes((b.title||"").trim().toLowerCase()) - ["administrator","owner/operator","owner / operator","owner operator"].includes((a.title||"").trim().toLowerCase()))
+    || ((b.role === "admin") - (a.role === "admin")) || String(a.created_at).localeCompare(String(b.created_at)));
+  return cands[0] || null;
+}
+function ownerOperator(){ return [...S.people.values()].filter(p => p.active && /home office/i.test(p.facility || "") && /owner/i.test(p.title || "")).sort((a,b) => String(a.created_at).localeCompare(String(b.created_at)))[0] || null; }
 function adminSettings(){
   const name = h("input",{class:"input",maxlength:"60"});
   const cents = h("input",{class:"input",type:"number",min:"0.1",step:"0.1"});
@@ -1277,6 +1287,25 @@ function adminSettings(){
   const miles = h("textarea",{class:"input",style:"min-height:110px",placeholder:"5 = 250\n10 = 500"});
   const ptsHint = inp => { const d = h("div",{class:"small muted"}); const u = () => d.textContent = (+inp.value >= 0 && inp.value !== "") ? "= " + Math.round(+inp.value * 100 / (+cents.value || S.settings.point_value_cents)).toLocaleString() + " pts" : ""; inp.addEventListener("input", u); cents.addEventListener("input", u); d._u = u; return d; };
   const bdayHint = ptsHint(bday$), annivHint = ptsHint(anniv$);
+  const senderBox = h("div",{style:"display:flex;flex-direction:column;gap:10px"});
+  let senderSel = {};
+  function drawSenders(){
+    const chosen = S.settings.celebration_senders || {};
+    senderSel = {};
+    const people = [...S.people.values()].filter(p => p.active).sort((a,b) => a.full_name.localeCompare(b.full_name));
+    const owner = ownerOperator();
+    senderBox.replaceChildren(...(S.settings.facilities || []).map(b => {
+      const auto = autoSender(b) || owner;
+      const sel = h("select",{class:"input"},
+        h("option",{value:"",text:"Automatic: " + (auto ? auto.full_name + (auto.title ? " (" + auto.title + ")" : "") : "Revive Rewards")}),
+        h("optgroup",{label:b}, people.filter(p => p.facility === b).map(p => h("option",{value:p.id,text:p.full_name + (p.title ? " (" + p.title + ")" : "")}))),
+        h("optgroup",{label:"Everyone else"}, people.filter(p => p.facility !== b).map(p => h("option",{value:p.id,text:p.full_name + (p.title ? " (" + p.title + ")" : "") + (p.facility ? " · " + p.facility : "")}))));
+      sel.value = chosen[b] && S.people.has(chosen[b]) ? chosen[b] : "";
+      sel.addEventListener("change", () => dirty = true);
+      senderSel[b] = sel;
+      return h("div",{class:"two",style:"align-items:center"}, h("div",{style:"font-weight:500",text:b}), sel);
+    }));
+  }
   let dirty = false; [name, cents, vals, facs, autoOn, bday$, anniv$, miles].forEach(x => x.addEventListener("input", () => dirty = true));
   const save = h("button",{class:"btn primary",text:"Save settings"});
   save.onclick = async () => {
@@ -1292,7 +1321,8 @@ function adminSettings(){
     if (!(+bday$.value >= 0) || !(+anniv$.value >= 0)) return toast("Celebration amounts must be 0 or more.");
     busy(save, "Saving…");
     try { await q(sb.from("settings").update({ program_name: name.value.trim() || "Revive Rewards", point_value_cents:pc, core_values:lines(vals), facilities:lines(facs),
-      auto_awards:autoOn.checked, birthday_dollars:+bday$.value || 0, anniversary_dollars:+anniv$.value || 0, milestone_dollars:ms }).eq("id",1));
+      auto_awards:autoOn.checked, birthday_dollars:+bday$.value || 0, anniversary_dollars:+anniv$.value || 0, milestone_dollars:ms,
+      celebration_senders: Object.fromEntries(Object.entries(senderSel).filter(([,el]) => el.value).map(([b,el]) => [b, el.value])) }).eq("id",1));
       dirty = false; toast("Settings saved"); await refresh(); }
     catch(e){ toast(errText(e)); }
     unbusy(save);
@@ -1311,13 +1341,16 @@ function adminSettings(){
       h("div",{}, h("label",{class:"f",text:"Work anniversary, regular years ($)"}), anniv$, annivHint),
       h("div",{}, h("label",{class:"f",text:"Milestone anniversaries (years = dollars, one per line)"}), miles,
         h("div",{class:"small muted",text:"A milestone replaces the regular anniversary amount for that year."}))),
+    h("h3",{text:"Who celebration posts come from",style:"font-size:19px;margin:22px 0 4px"}),
+    h("p",{class:"small muted",style:"margin:0 0 10px",text:"Automatic uses the person titled Administrator at each building, and the Owner/Operator for Revive Home Office. Administrators' own birthdays and anniversaries always come from the Owner/Operator. Pick someone else if a building's leader has a different title, like Executive Director."}),
+    senderBox,
     h("div",{class:"row",style:"margin-top:14px"}, h("span",{class:"sp"}), save));
   el._refresh = () => { if (dirty) return; const s = S.settings;
     name.value = s.program_name; cents.value = String(s.point_value_cents);
     vals.value = (s.core_values||[]).join("\n"); facs.value = (s.facilities||[]).join("\n");
     autoOn.checked = s.auto_awards !== false; bday$.value = String(s.birthday_dollars ?? 25); anniv$.value = String(s.anniversary_dollars ?? 25);
     const md = s.milestone_dollars || {}; miles.value = Object.keys(md).sort((a,b) => +a - +b).map(k => k + " = " + md[k]).join("\n");
-    bdayHint._u(); annivHint._u(); };
+    bdayHint._u(); annivHint._u(); drawSenders(); };
   return el;
 }
 
